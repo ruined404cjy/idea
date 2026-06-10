@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1090" viewBox="0 0 1700 1090">
+  <defs>
+    <style>
+      .bg { fill: #f7f9fc; }
+      .sqlbox { fill: #ffffff; stroke: #475569; stroke-width: 2; }
+      .bus { fill: #f1f5f9; stroke: #475569; stroke-width: 2; }
+      .l1 { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .l2 { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; }
+      .l3 { fill: #fff7ed; stroke: #ea580c; stroke-width: 2; }
+      .l4 { fill: #faf5ff; stroke: #9333ea; stroke-width: 2; stroke-dasharray: 7 5; }
+      .stage { fill: #e2e8f0; stroke: #94a3b8; stroke-width: 1.5; }
+      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 27px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 15px; fill: #475569; }
+      .stg { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #334155; }
+      .h2 { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #1e293b; }
+      .t { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 13px; fill: #1e293b; }
+      .small { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 12.5px; fill: #475569; }
+      .mono { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 14px; fill: #0f172a; }
+      .ms { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 12.5px; fill: #1d4ed8; }
+      .blue { fill: #2563eb; } .green { fill: #16a34a; } .orange { fill: #ea580c; } .purple { fill: #9333ea; } .muted { fill: #64748b; }
+      .lbl { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 12px; fill: #334155; }
+      .ar1 { fill: none; stroke: #2563eb; stroke-width: 2.4; }
+      .ar2 { fill: none; stroke: #16a34a; stroke-width: 2.4; }
+      .ar3 { fill: none; stroke: #ea580c; stroke-width: 2.4; }
+      .ar4 { fill: none; stroke: #9333ea; stroke-width: 2.4; stroke-dasharray: 7 5; }
+    </style>
+    <marker id="h1" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2563eb"/></marker>
+    <marker id="h2" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#16a34a"/></marker>
+    <marker id="h3" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#ea580c"/></marker>
+    <marker id="h4" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#9333ea"/></marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1700" height="1090"/>
+  <text class="title" x="40" y="44">FDW 数据流：SQL 参数在各回调间的流动</text>
+  <text class="subtitle" x="40" y="70">以示例 SQL 为例，四类参数（表身份 / 投影 / 谓词 / topk）经规划回调编码进 fdw_private，再经执行回调与 SDK 下传至对象存储。每条竖向色带为一类参数的流动路径。</text>
+
+  <!-- 阶段标签（左列） -->
+  <text class="stg" x="28" y="172">SQL</text>
+  <rect class="stage" x="20" y="232" width="150" height="156" rx="8"/>
+  <text class="stg" x="36" y="300">优化器</text>
+  <text class="stg" x="36" y="324">规划期回调</text>
+  <rect class="stage" x="20" y="538" width="150" height="160" rx="8"/>
+  <text class="stg" x="36" y="608">执行器</text>
+  <text class="stg" x="36" y="632">执行期回调</text>
+  <rect class="stage" x="20" y="748" width="150" height="142" rx="8"/>
+  <text class="stg" x="36" y="812">SDK /</text>
+  <text class="stg" x="36" y="836">Reader</text>
+  <rect class="stage" x="20" y="916" width="150" height="82" rx="8"/>
+  <text class="stg" x="36" y="962">对象存储</text>
+
+  <!-- ===== B0：SQL + 解析 token ===== -->
+  <rect class="sqlbox" x="185" y="84" width="1480" height="58" rx="10"/>
+  <text class="mono" x="205" y="120">SELECT _row_id, payload FROM items WHERE category = 3 AND price &lt; 500   ORDER BY emb &lt;-&gt; :q LIMIT 10;</text>
+
+  <rect class="l1" x="185" y="150" width="320" height="46" rx="8"/>
+  <text class="t blue" x="201" y="170">表身份</text>
+  <text class="small" x="201" y="188">items（namespace.table）</text>
+  <rect class="l2" x="535" y="150" width="320" height="46" rx="8"/>
+  <text class="t green" x="551" y="170">投影 projection</text>
+  <text class="small" x="551" y="188">_row_id, payload, emb</text>
+  <rect class="l3" x="885" y="150" width="320" height="46" rx="8"/>
+  <text class="t orange" x="901" y="170">谓词 pred</text>
+  <text class="small" x="901" y="188">category=3, price&lt;500</text>
+  <rect class="l4" x="1235" y="150" width="430" height="46" rx="8"/>
+  <text class="t purple" x="1251" y="170">topk（阶段三）</text>
+  <text class="small" x="1251" y="188">emb &lt;-&gt; :q · k=10 · partition</text>
+
+  <!-- B0 → B1 arrows -->
+  <path class="ar1" d="M345 196 L345 230" marker-end="url(#h1)"/>
+  <text class="lbl" x="352" y="218">table_name</text>
+  <path class="ar2" d="M695 196 L695 230" marker-end="url(#h2)"/>
+  <text class="lbl" x="702" y="218">reltarget</text>
+  <path class="ar3" d="M1045 196 L1045 230" marker-end="url(#h3)"/>
+  <text class="lbl" x="1052" y="218">RestrictInfo</text>
+  <path class="ar4" d="M1450 196 L1450 230" marker-end="url(#h4)"/>
+  <text class="lbl purple" x="1457" y="218">ORDER BY / LIMIT</text>
+
+  <!-- ===== B1：规划期回调 ===== -->
+  <rect class="l1" x="185" y="232" width="320" height="156" rx="10"/>
+  <text class="h2 blue" x="201" y="258">GetForeignPlan</text>
+  <text class="t" x="201" y="280">读 Catalog.tables</text>
+  <text class="t" x="201" y="300">→ scanEntry{ metadata_location,</text>
+  <text class="t" x="201" y="318">　 snapshot_id, schema_id }</text>
+  <text class="small" x="201" y="342">GetForeignRelSize：读 snapshots</text>
+  <text class="small" x="201" y="360">.total_records × 选择率 → 估行</text>
+
+  <rect class="l2" x="535" y="232" width="320" height="156" rx="10"/>
+  <text class="h2 green" x="551" y="258">GetForeignPlan</text>
+  <text class="t" x="551" y="282">pull_varattnos（reltarget +</text>
+  <text class="t" x="551" y="300">　 local 谓词用到的列）</text>
+  <text class="t" x="551" y="324">→ retrievedAttrs [ attno… ]</text>
+  <text class="small" x="551" y="358">即列裁剪 / 投影下推</text>
+
+  <rect class="l3" x="885" y="232" width="320" height="156" rx="10"/>
+  <text class="h2 orange" x="901" y="258">GetForeignPlan</text>
+  <text class="t" x="901" y="280">classifyConditions：</text>
+  <text class="t" x="901" y="300">remote → pushedFilter（序列化）</text>
+  <text class="t" x="901" y="320">local → 节点 qual（留执行器）</text>
+  <text class="small purple" x="901" y="358">分区谓词 → partition mask</text>
+
+  <rect class="l4" x="1235" y="232" width="430" height="156" rx="10"/>
+  <text class="h2 purple" x="1251" y="258">GetForeignPaths（阶段三）</text>
+  <text class="t" x="1251" y="282">在全表路径外追加索引扫描路径，</text>
+  <text class="t" x="1251" y="302">由优化器按代价择优。</text>
+  <text class="t purple" x="1251" y="330">编 indexSpec{ S, Q, metric, k, k' }</text>
+  <text class="small" x="1251" y="360">locator 形态一并预留</text>
+
+  <!-- B1 → B2 -->
+  <path class="ar1" d="M345 388 L345 403" marker-end="url(#h1)"/>
+  <path class="ar2" d="M695 388 L695 403" marker-end="url(#h2)"/>
+  <path class="ar3" d="M1045 388 L1045 403" marker-end="url(#h3)"/>
+  <path class="ar4" d="M1450 388 L1450 403" marker-end="url(#h4)"/>
+
+  <!-- ===== B2：fdw_private 总线 ===== -->
+  <rect class="bus" x="185" y="405" width="1480" height="76" rx="10"/>
+  <text class="h2" x="205" y="430">fdw_private（随 ForeignScan 节点序列化下传 — 规划期 → 执行期唯一通道）</text>
+  <text class="ms blue" x="205" y="462">scanEntry</text>
+  <text class="ms green" x="535" y="462">retrievedAttrs</text>
+  <text class="ms orange" x="885" y="462">pushedFilter（+ local qual 留节点）</text>
+  <text class="ms purple" x="1340" y="462">indexSpec · locator</text>
+
+  <!-- B2 → B3 -->
+  <path class="ar1" d="M345 481 L345 533" marker-end="url(#h1)"/>
+  <path class="ar2" d="M695 481 L695 533" marker-end="url(#h2)"/>
+  <path class="ar3" d="M1045 481 L1045 533" marker-end="url(#h3)"/>
+  <path class="ar4" d="M1450 481 L1450 533" marker-end="url(#h4)"/>
+  <text class="lbl muted" x="360" y="512">BeginForeignScan 解码 fdw_private，组装 open() 入参</text>
+
+  <!-- ===== B3：执行期回调 ===== -->
+  <rect class="l1" x="185" y="538" width="320" height="150" rx="10"/>
+  <text class="h2 blue" x="201" y="564">scanEntry + OPTIONS</text>
+  <text class="t" x="201" y="588">OPTIONS → storage_config</text>
+  <text class="ms" x="201" y="612">open(metadata_location,</text>
+  <text class="ms" x="201" y="630">　　 storage_config, …)</text>
+  <text class="small" x="201" y="662">建 IcebergScanState</text>
+
+  <rect class="l2" x="535" y="538" width="320" height="150" rx="10"/>
+  <text class="h2 green" x="551" y="564">attno → 列名</text>
+  <text class="t" x="551" y="588">get_attname(retrievedAttrs)</text>
+  <text class="ms" x="551" y="612">open(… columns …)</text>
+  <text class="small" x="551" y="644">投影随 open 绑定到 reader</text>
+
+  <rect class="l3" x="885" y="538" width="320" height="150" rx="10"/>
+  <text class="h2 orange" x="901" y="564">filter = pushedFilter</text>
+  <text class="ms" x="901" y="588">open(… filter …)</text>
+  <text class="t" x="901" y="614">local qual →</text>
+  <text class="t" x="901" y="632">ExecQual 逐行重过滤</text>
+
+  <rect class="l4" x="1235" y="538" width="430" height="150" rx="10"/>
+  <text class="h2 purple" x="1251" y="564">locator（阶段三）</text>
+  <text class="ms purple" x="1251" y="588">read_by_locator(file, pos, cols)</text>
+  <text class="t" x="1251" y="614">据索引候选定位整行；</text>
+  <text class="t" x="1251" y="632">与 delta 扫描结果合并后回表。</text>
+
+  <text class="small muted" x="201" y="710">IterateForeignScan：iceberg_scan_next → Arrow 列批 → ArrowBatchToHeapTuples → 逐行返回 TupleTableSlot（循环，批耗尽再取）。</text>
+
+  <!-- B3 → B4 -->
+  <path class="ar1" d="M345 718 L345 746" marker-end="url(#h1)"/>
+  <text class="lbl" x="352" y="736">metadata_location</text>
+  <path class="ar2" d="M695 718 L695 746" marker-end="url(#h2)"/>
+  <text class="lbl" x="702" y="736">columns</text>
+  <path class="ar3" d="M1045 718 L1045 746" marker-end="url(#h3)"/>
+  <text class="lbl" x="1052" y="736">filter</text>
+  <path class="ar4" d="M1450 718 L1450 746" marker-end="url(#h4)"/>
+  <text class="lbl purple" x="1457" y="736">locator</text>
+
+  <!-- ===== B4：SDK / Reader ===== -->
+  <rect class="l1" x="185" y="748" width="320" height="142" rx="10"/>
+  <text class="h2 blue" x="201" y="774">open：解析与文件规划</text>
+  <text class="t" x="201" y="798">读 metadata.json → manifest list</text>
+  <text class="t" x="201" y="818">→ manifest → data file</text>
+  <text class="small" x="201" y="848">PlanFiles 产出 FileScanTask</text>
+  <text class="small" x="201" y="872">（规划期不读对象存储）</text>
+
+  <rect class="l2" x="535" y="748" width="320" height="142" rx="10"/>
+  <text class="h2 green" x="551" y="774">读取选中列</text>
+  <text class="t" x="551" y="798">仅读 columns 对应的</text>
+  <text class="t" x="551" y="818">Parquet column chunk</text>
+  <text class="small" x="551" y="848">减少 I/O 与跨语言转换</text>
+
+  <rect class="l3" x="885" y="748" width="320" height="142" rx="10"/>
+  <text class="h2 orange" x="901" y="774">用 filter 剪枝</text>
+  <text class="t" x="901" y="798">manifest 分区 / 列统计剪枝</text>
+  <text class="t" x="901" y="818">+ Parquet 行组跳过</text>
+  <text class="small" x="901" y="848">应用 delete（MOR）</text>
+
+  <rect class="l4" x="1235" y="748" width="430" height="142" rx="10"/>
+  <text class="h2 purple" x="1251" y="774">索引检索（阶段三）</text>
+  <text class="t" x="1251" y="798">分区索引近似最近邻 → 候选 (file, pos)</text>
+  <text class="t" x="1251" y="818">read_by_locator 定位整行</text>
+  <text class="small" x="1251" y="848">topk 与 delta 归并</text>
+
+  <text class="small muted" x="201" y="912">next：组装 Arrow C Data（ArrowArray + ArrowSchema）回传 FDW，由 converters 转 Datum / HeapTuple。</text>
+
+  <!-- B4 → B5 -->
+  <path class="ar1" d="M345 890 L345 914" marker-end="url(#h1)"/>
+  <path class="ar2" d="M695 890 L695 914" marker-end="url(#h2)"/>
+  <path class="ar3" d="M1045 890 L1045 914" marker-end="url(#h3)"/>
+  <path class="ar4" d="M1450 890 L1450 914" marker-end="url(#h4)"/>
+
+  <!-- ===== B5：对象存储 ===== -->
+  <rect class="l1" x="185" y="916" width="320" height="64" rx="10"/>
+  <text class="t blue" x="201" y="942">metadata.json · manifest list</text>
+  <text class="t blue" x="201" y="962">· manifest</text>
+  <rect class="l2" x="535" y="916" width="320" height="64" rx="10"/>
+  <text class="t green" x="551" y="942">*.parquet（列存数据文件）</text>
+  <text class="small" x="551" y="962">按列 + 行组读取</text>
+  <rect class="l3" x="885" y="916" width="320" height="64" rx="10"/>
+  <text class="t orange" x="901" y="942">delete file / deletion vector</text>
+  <text class="small" x="901" y="962">MOR 合并依据</text>
+  <rect class="l4" x="1235" y="916" width="430" height="64" rx="10"/>
+  <text class="t purple" x="1251" y="942">seg_*.blob · mf_pX.json（索引旁路，阶段三）</text>
+  <text class="small" x="1251" y="962">_index/part=pX/ 下分区索引</text>
+
+  <!-- 图例 -->
+  <text class="small" x="40" y="1030">流向自上而下：优化器 → 执行器 → SDK → 对象存储。</text>
+  <text class="small blue" x="560" y="1030">蓝 表身份/scanEntry</text>
+  <text class="small green" x="760" y="1030">绿 投影/列</text>
+  <text class="small orange" x="900" y="1030">橙 谓词/filter</text>
+  <text class="small purple" x="1060" y="1030">紫虚线 分区 · topk · 索引回表（阶段三）</text>
+</svg>
