@@ -1,6 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="910" viewBox="0 0 1480 910">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1498"
+   height="880"
+   viewBox="0 0 1498 880"
+   version="1.1"
+   id="svg58"
+   sodipodi:docname="fdw_layer_phase1_overview.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   inkscape:export-filename="fdw_layer_phase1_overview.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview58"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.64602275"
+     inkscape:cx="297.20316"
+     inkscape:cy="571.96128"
+     inkscape:window-width="2560"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg58" />
+  <defs
+     id="defs2">
+    <style
+       id="style1">
       .bg { fill: #f7f9fc; }
       .panel { fill: #ffffff; stroke: #94a3b8; stroke-width: 2; }
       .soft { fill: #f8fbff; stroke: #64748b; stroke-width: 2; }
@@ -8,120 +43,526 @@
       .blue { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
       .green { fill: #f0fdf4; stroke: #16a34a; stroke-width: 2; }
       .muted { fill: #f1f5f9; stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 7 6; }
-      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 28px; font-weight: 700; fill: #0f172a; }
-      .subtitle { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 15px; fill: #475569; }
-      .h1 { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 21px; font-weight: 700; fill: #0f172a; }
-      .h2 { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 17px; font-weight: 700; fill: #1e293b; }
-      .small { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 14px; fill: #1e293b; }
-      .tiny { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 12.5px; fill: #64748b; }
-      .mono { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 14px; fill: #1d4ed8; }
-      .lbl { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 13px; fill: #475569; }
-      .gtext { fill: #475569; }
+      .title { font-family: &quot;Microsoft YaHei&quot;; font-size: 27px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: &quot;Microsoft YaHei&quot;; font-size: 15px; fill: #475569; }
+      .h1 { font-family: &quot;Microsoft YaHei&quot;; font-size: 21px; font-weight: 700; fill: #0f172a; }
+      .h2 { font-family: &quot;Microsoft YaHei&quot;; font-size: 17px; font-weight: 700; fill: #1e293b; }
+      .small { font-family: &quot;Microsoft YaHei&quot;; font-size: 14.5px; fill: #1e293b; }
+      .tiny { font-family: &quot;Microsoft YaHei&quot;; font-size: 13px; fill: #64748b; }
+      .mono { font-family: Consolas, monospace; font-size: 14px; fill: #1d4ed8; }
+      .monoq { font-family: Consolas, monospace; font-size: 15px; fill: #0f172a; }
+      .lbl { font-family: &quot;Microsoft YaHei&quot;; font-size: 13.5px; fill: #334155; }
+      .lblr { font-family: &quot;Microsoft YaHei&quot;; font-size: 13.5px; fill: #b45309; }
+      .fld { font-family: &quot;Microsoft YaHei&quot;; font-size: 13.5px; fill: #3730a3; }
       .mtext { fill: #64748b; }
-      .line { fill: none; stroke: #475569; stroke-width: 2.4; }
-      .dash { fill: none; stroke: #94a3b8; stroke-width: 2.2; stroke-dasharray: 7 6; }
-      .chip { fill: #eef2ff; stroke: #818cf8; stroke-width: 1.2; }
+      .line { fill: none; stroke: #475569; stroke-width: 2.2; }
+      .dash { fill: none; stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 7 6; }
     </style>
-    <marker id="arw" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M0,0 L9,3.2 L0,6.4 Z" fill="#475569"/>
+    <marker
+       id="arw"
+       markerWidth="8"
+       markerHeight="6"
+       refX="7.5"
+       refY="3"
+       orient="auto"
+       markerUnits="userSpaceOnUse"
+       viewBox="0 0 8 6"
+       preserveAspectRatio="xMidYMid">
+      <path
+         d="M 0,0 8,3 0,6 Z"
+         fill="#475569"
+         id="path1" />
     </marker>
-    <marker id="arw-m" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M0,0 L9,3.2 L0,6.4 Z" fill="#94a3b8"/>
+    <marker
+       id="arwm"
+       markerWidth="8"
+       markerHeight="6"
+       refX="7.5"
+       refY="3"
+       orient="auto"
+       markerUnits="userSpaceOnUse"
+       viewBox="0 0 8 6"
+       preserveAspectRatio="xMidYMid">
+      <path
+         d="M 0,0 8,3 0,6 Z"
+         fill="#94a3b8"
+         id="path2" />
+    </marker>
+    <marker
+       id="arw-0"
+       markerWidth="10"
+       markerHeight="10"
+       refX="7.5"
+       refY="3"
+       orient="auto"
+       markerUnits="userSpaceOnUse">
+      <path
+         d="M 0,0 8,3 0,6 Z"
+         fill="#475569"
+         id="path1-9" />
     </marker>
   </defs>
-
-  <rect class="bg" x="0" y="0" width="1480" height="910"/>
-
-  <text class="title" x="56" y="48">openGauss Iceberg FDW 层（第一阶段）：模块与上下游关系</text>
-  <text class="subtitle" x="56" y="78">只读全表扫描：FDW 规划 / 执行两阶段、fdw_private 传递，及与解析器、Catalog、Reader / SDK 的接口。</text>
-
-  <!-- ① 查询接入 -->
-  <rect class="panel" x="56" y="100" width="1368" height="116" rx="12"/>
-  <rect x="56" y="100" width="8" height="116" rx="4" fill="#1f2937"/>
-  <text class="h1" x="88" y="140">① 查询接入（parser + analyzer → 优化器）</text>
-  <text class="small" x="88" y="170">baserel（RestrictInfo · reltarget）入三个规划回调；tlist / scan_clauses 入 GetForeignPlan。</text>
-  <text class="tiny" x="88" y="196">内核解析为查询树后，优化器把外表计划结构传入 FDW 回调；FDW 不直接对接 parser。</text>
-
-  <!-- ① → FDW -->
-  <line class="line" x1="300" y1="216" x2="300" y2="250" marker-end="url(#arw)"/>
-  <text class="lbl" x="312" y="240">计划接入</text>
-
-  <!-- ② FDW 层 -->
-  <rect class="fdw" x="56" y="252" width="1084" height="316" rx="16"/>
-  <text class="h1" x="80" y="290">② FDW 层（本组负责）</text>
-  <text class="small" x="80" y="316">FdwRoutine 回调 · 谓词与列下推 · Arrow→HeapTuple 转换 · 内存管理 · 规划→执行私有数据传递。</text>
-
+  <rect
+     class="bg"
+     x="30.184696"
+     y="0"
+     width="1438.0826"
+     height="880"
+     id="rect2"
+     style="stroke-width:0.979143" />
+  <text
+     class="title"
+     x="73.801231"
+     y="44"
+     id="text2">openGauss Iceberg FDW 层（第一阶段）：模块与上下游接口</text>
+  <text
+     class="subtitle"
+     x="73.801231"
+     y="72"
+     id="text3">只读全表扫描：规划 / 执行两阶段经 fdw_private 衔接，与优化器、Catalog、Reader / SDK 的接口与参数标于箭头。</text>
+  <!-- ① 优化器 -->
+  <rect
+     class="panel"
+     x="73.788742"
+     y="89.987511"
+     width="1353.1965"
+     height="98.024979"
+     rx="11.699105"
+     id="rect3" />
+  <rect
+     x="73.801231"
+     y="90"
+     width="8"
+     height="98"
+     rx="4"
+     fill="#1f2937"
+     id="rect4" />
+  <text
+     class="h1"
+     x="101.80123"
+     y="124"
+     id="text4">① 优化器（查询规划期）</text>
+  <text
+     class="monoq"
+     x="101.80123"
+     y="160"
+     id="text5">SELECT id, payload FROM items WHERE category = 3 AND price &lt; 500;</text>
+  <text
+     class="small"
+     x="857.80121"
+     y="120"
+     id="text6">优化器把外表的计划结构传入 FDW 规划回调：</text>
+  <text
+     class="small"
+     x="857.80121"
+     y="146"
+     id="text7">RelOptInfo（baserel：RestrictInfo、reltarget）</text>
+  <text
+     class="small"
+     x="857.80121"
+     y="172"
+     id="text8">与 scan_clauses。</text>
+  <line
+     class="line"
+     x1="317.80124"
+     y1="188"
+     x2="317.80124"
+     y2="250"
+     marker-end="url(#arw)"
+     id="line8" />
+  <text
+     class="lbl"
+     x="329.80124"
+     y="228"
+     id="text9">RelOptInfo、 scan_clauses</text>
+  <!-- ② FDW -->
+  <rect
+     class="fdw"
+     x="73.801231"
+     y="252"
+     width="1004"
+     height="306"
+     rx="16"
+     id="rect9" />
+  <text
+     class="h1"
+     x="97.801231"
+     y="286"
+     id="text10">② FDW 层（本组负责）</text>
+  <text
+     class="small"
+     x="97.801231"
+     y="312"
+     id="text11">FdwRoutine 回调、列裁剪、谓词下推(裁剪) + qual 复核、Arrow→HeapTuple 、规划→执行私有数据</text>
   <!-- 规划期 -->
-  <rect class="blue" x="80" y="330" width="460" height="222" rx="10"/>
-  <text class="h2" x="100" y="360">规划期回调</text>
-  <text class="mono" x="100" y="388">GetForeignRelSize</text>
-  <text class="small" x="100" y="408">估行：snapshot 基数 × 选择率</text>
-  <text class="mono" x="100" y="434">GetForeignPaths</text>
-  <text class="small" x="100" y="454">登记全表扫描路径（多路径预留）</text>
-  <text class="mono" x="100" y="480">GetForeignPlan</text>
-  <text class="small" x="100" y="500">解析 Catalog · 列裁剪 · 谓词全下推</text>
-  <text class="mono" x="100" y="526">make_foreignscan</text>
-  <text class="small" x="100" y="546">产出 ForeignScan + fdw_private</text>
-
+  <rect
+     class="blue"
+     x="97.801231"
+     y="330"
+     width="312"
+     height="216"
+     rx="10"
+     id="rect11" />
+  <text
+     class="h2"
+     x="117.80123"
+     y="358"
+     id="text12">规划期回调</text>
+  <text
+     class="mono"
+     x="117.80123"
+     y="384"
+     id="text13">GetForeignRelSize</text>
+  <text
+     class="small"
+     x="117.80123"
+     y="404"
+     id="text14">估行：total_records × 选择率</text>
+  <text
+     class="mono"
+     x="117.80123"
+     y="429"
+     id="text15">GetForeignPaths</text>
+  <text
+     class="small"
+     x="117.80123"
+     y="449"
+     id="text16">全表路径（多路径预留）</text>
+  <text
+     class="mono"
+     x="117.80123"
+     y="474"
+     id="text17">GetForeignPlan</text>
+  <text
+     class="small"
+     x="117.80123"
+     y="494"
+     id="text18">解析 Catalog 、列裁剪、 谓词下推+留 qual</text>
+  <text
+     class="mono"
+     x="117.80123"
+     y="519"
+     id="text19">make_foreignscan</text>
+  <text
+     class="small"
+     x="117.80123"
+     y="539"
+     id="text20">产出 ForeignScan 节点</text>
   <!-- 执行期 -->
-  <rect class="green" x="630" y="330" width="486" height="222" rx="10"/>
-  <text class="h2" x="650" y="360">执行期回调</text>
-  <text class="mono" x="650" y="388">BeginForeignScan</text>
-  <text class="small" x="650" y="408">解码 fdw_private · 开 Reader · 建 converters</text>
-  <text class="mono" x="650" y="434">IterateForeignScan</text>
-  <text class="small" x="650" y="454">Arrow → HeapTuple 逐行返回 Slot</text>
-  <text class="mono" x="650" y="480">EndForeignScan</text>
-  <text class="small" x="650" y="500">释放 Reader 与内存上下文</text>
-  <text class="mono" x="650" y="526">ReScan / Explain</text>
-  <text class="small" x="650" y="546">本期占位</text>
-
-  <!-- fdw_private 规划 → 执行 -->
-  <line class="line" x1="540" y1="441" x2="628" y2="441" marker-end="url(#arw)"/>
-  <text class="mono" x="584" y="430" text-anchor="middle">fdw_private</text>
-  <text class="tiny" x="584" y="460" text-anchor="middle">可序列化</text>
-
-  <!-- ④ 索引层（仅模块·预留） -->
-  <rect class="muted" x="1168" y="330" width="256" height="222" rx="12"/>
-  <text class="h2 mtext" x="1188" y="362">④ 分区向量索引层</text>
-  <text class="small mtext" x="1188" y="392">后续阶段 · 本期不实现</text>
-  <text class="tiny" x="1188" y="420">FDW 仅预留路径登记</text>
-  <text class="tiny" x="1188" y="440">与回表接口形态</text>
-  <line class="dash" x1="1140" y1="441" x2="1166" y2="441" marker-end="url(#arw-m)"/>
-  <text class="tiny mtext" x="1148" y="432">预留</text>
-
-  <!-- 规划期 → Catalog -->
-  <line class="line" x1="300" y1="552" x2="300" y2="606" marker-end="url(#arw)"/>
-  <text class="lbl" x="312" y="584">元数据只读</text>
-
-  <!-- 执行期 → SDK -->
-  <line class="line" x1="860" y1="552" x2="860" y2="606" marker-end="url(#arw)"/>
-  <text class="lbl" x="872" y="584">open / next / close</text>
-
+  <rect
+     class="green"
+     x="707.80121"
+     y="330"
+     width="312"
+     height="216"
+     rx="10"
+     id="rect20" />
+  <text
+     class="h2"
+     x="727.80121"
+     y="358"
+     id="text21">执行期回调</text>
+  <text
+     class="mono"
+     x="727.80121"
+     y="384"
+     id="text22">BeginForeignScan</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="404"
+     id="text23">开 Reader · 建 converters</text>
+  <text
+     class="mono"
+     x="727.80121"
+     y="429"
+     id="text24">IterateForeignScan</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="449"
+     id="text25">Arrow→HeapTuple · 逐行返回</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="469"
+     id="text26">ExecScan 调 ExecQual 谓词重过滤</text>
+  <text
+     class="mono"
+     x="727.80121"
+     y="494"
+     id="text27">EndForeignScan</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="514"
+     id="text28">释放 Reader 与内存</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="539"
+     id="text29">ReScan / Explain（占位）</text>
+  <!-- fdw_private -->
+  <line
+     class="line"
+     x1="411.80124"
+     y1="400"
+     x2="703.80121"
+     y2="400"
+     marker-end="url(#arw)"
+     id="line29" />
+  <text
+     class="lbl"
+     x="557.80121"
+     y="390"
+     text-anchor="middle"
+     id="text30">fdw_private（规划 → 执行、可序列化 List）</text>
+  <text
+     class="fld"
+     x="417.80124"
+     y="426"
+     id="text31">[0] scanEntry：metadata_location 等</text>
+  <text
+     class="fld"
+     x="417.80124"
+     y="450"
+     id="text32">[1] retrievedAttrs：投影列 attno</text>
+  <text
+     class="fld"
+     x="417.80124"
+     y="474"
+     id="text33">[2] pushedFilter：下推谓词串</text>
+  <!-- ⑥ 索引 SDK（预留，右移放大） -->
+  <rect
+     class="muted"
+     x="1107.6298"
+     y="251.83063"
+     width="318.93832"
+     height="135.05818"
+     rx="10.288334"
+     id="rect33" />
+  <text
+     class="h2 mtext"
+     x="1129.8013"
+     y="288"
+     id="text34">⑥ 索引 SDK（预留）</text>
+  <text
+     class="small"
+     x="1129.8013"
+     y="320"
+     id="text35">向量索引候选 → Arrow 批</text>
+  <text
+     class="small"
+     x="1129.8013"
+     y="346"
+     id="text36">与无索引 SDK 同层级</text>
+  <text
+     class="tiny"
+     x="1129.8013"
+     y="372"
+     id="text37">返回 Arrow，转 HeapTuple</text>
+  <line
+     class="dash"
+     x1="1019.8012"
+     y1="336"
+     x2="1105.8013"
+     y2="336"
+     marker-end="url(#arwm)"
+     id="line37" />
+  <text
+     class="tiny mtext"
+     x="1027.8013"
+     y="328"
+     id="text38">预留</text>
+  <!-- ⑦ delta 表（预留，右移放大） -->
+  <rect
+     class="muted"
+     x="1108.3811"
+     y="419.68546"
+     width="317.43466"
+     height="137.81464"
+     rx="10.239828"
+     id="rect38" />
+  <text
+     class="h2 mtext"
+     x="1130.5752"
+     y="455.87686"
+     id="text39">⑦ delta 表（预留）</text>
+  <text
+     class="small"
+     x="1130.5752"
+     y="487.87686"
+     id="text40">oG 本地存储，类似普通表</text>
+  <text
+     class="small"
+     x="1130.5752"
+     y="513.87689"
+     id="text41">扫描直接得 HeapTuple</text>
+  <text
+     class="tiny"
+     x="1130.5752"
+     y="539.87689"
+     id="text42">按常规数据库表处理</text>
+  <line
+     class="dash"
+     x1="1020.5752"
+     y1="465.23306"
+     x2="1106.5752"
+     y2="465.23306"
+     marker-end="url(#arwm)"
+     id="line42" />
+  <text
+     class="tiny mtext"
+     x="1027.8013"
+     y="482"
+     id="text43">预留</text>
+  <!-- 规划期 ↔ ③：请求贴向下箭头左侧 · 返回在向上箭头右侧 -->
+  <line
+     class="line"
+     x1="357.80124"
+     y1="558"
+     x2="357.80124"
+     y2="632"
+     marker-end="url(#arw)"
+     id="line43" />
+  <line
+     class="line"
+     x1="389.80124"
+     y1="632"
+     x2="389.80124"
+     y2="558"
+     marker-end="url(#arw)"
+     id="line44"
+     style="fill:#b45309;fill-opacity:1;stroke:#b5560e;stroke-opacity:1" />
+  <line
+     class="line"
+     x1="948.41425"
+     y1="633.86322"
+     x2="948.41425"
+     y2="559.86322"
+     marker-end="url(#arw-0)"
+     id="line44-8"
+     style="fill:#b45309;fill-opacity:1;stroke:#b5560e;stroke-width:2.2;stroke-opacity:1;marker-end:url(#arw)" />
+  <text
+     class="lbl"
+     x="349.80124"
+     y="599"
+     text-anchor="end"
+     id="text44">点查 tables_internal / snapshots</text>
+  <text
+     class="lblr"
+     x="399.80124"
+     y="599"
+     id="text45">表身份指针、total_records</text>
+  <!-- 执行期 ↔ ⑤：请求(open/next)贴向下箭头左侧 · 返回贴向上箭头右侧 -->
+  <line
+     class="line"
+     x1="917.80121"
+     y1="558"
+     x2="917.80121"
+     y2="632"
+     marker-end="url(#arw)"
+     id="line45" />
+  <text
+     class="lbl"
+     x="909.80121"
+     y="586"
+     text-anchor="end"
+     id="text46">open(metadata_location、 投影、 谓词)</text>
+  <text
+     class="lbl"
+     x="909.80121"
+     y="608"
+     text-anchor="end"
+     id="text47">next：scan 指针</text>
+  <text
+     class="lblr"
+     x="957.80121"
+     y="586"
+     id="text48">scan 指针</text>
+  <text
+     class="lblr"
+     x="957.80121"
+     y="608"
+     id="text49">Arrow 数组</text>
   <!-- ③ Catalog -->
-  <rect class="soft" x="80" y="608" width="460" height="158" rx="12"/>
-  <text class="h2" x="100" y="640">③ 上游 Catalog（只读）</text>
-  <text class="small" x="100" y="668">tables：metadata_location · snapshot / schema id</text>
-  <text class="small" x="100" y="694">snapshots：total_records（估行）</text>
-  <text class="tiny" x="100" y="722">规划期经 SPI / systable 点查，不访问对象存储</text>
-
-  <!-- ⑤ Reader / SDK -->
-  <rect class="soft" x="630" y="608" width="486" height="158" rx="12"/>
-  <text class="h2" x="650" y="640">⑤ 下游 Reader / SDK</text>
-  <text class="small" x="650" y="668">Java SDK + C/C++ 桥接（JNI + 内嵌 JVM）</text>
-  <text class="small" x="650" y="694">open / next / close → 逐批 Arrow 列批</text>
-  <text class="tiny" x="650" y="722">Arrow C Data Interface 为 FDW ↔ Reader 边界</text>
-
-  <!-- SDK → 对象存储 -->
-  <line class="line" x1="860" y1="766" x2="860" y2="800" marker-end="url(#arw)"/>
-  <text class="lbl" x="872" y="788">读 Parquet</text>
-
-  <!-- 对象存储 -->
-  <rect class="panel" x="630" y="802" width="486" height="64" rx="12"/>
-  <text class="h2" x="650" y="834">对象存储 S3 / OBS</text>
-  <text class="tiny" x="650" y="856">metadata.json · manifest · data file（Parquet）</text>
-
-  <!-- 图例 -->
-  <rect class="chip" x="56" y="802" width="520" height="64" rx="12"/>
-  <text class="small" x="76" y="828">图例</text>
-  <text class="tiny" x="76" y="850">蓝 = 规划期回调 · 绿 = 执行期回调 · 灰 = 上下游模块 · 虚线 = 后续阶段预留</text>
+  <rect
+     class="soft"
+     x="97.834915"
+     y="636.03369"
+     width="333.6037"
+     height="97.932625"
+     rx="12.830912"
+     id="rect49" />
+  <text
+     class="h2"
+     x="117.80123"
+     y="668"
+     id="text50">③ Catalog 元信息表</text>
+  <text
+     class="small"
+     x="117.80123"
+     y="698"
+     id="text51">iceberg_catalog.tables_internal / snapshots</text>
+  <text
+     class="tiny"
+     x="117.80123"
+     y="722"
+     id="text52">库内普通表、 规划期系统表点查</text>
+  <!-- ⑤ Reader -->
+  <rect
+     class="soft"
+     x="707.80121"
+     y="636"
+     width="312"
+     height="98"
+     rx="12"
+     id="rect52" />
+  <text
+     class="h2"
+     x="727.80121"
+     y="668"
+     id="text53">⑤ Reader / SDK</text>
+  <text
+     class="small"
+     x="727.80121"
+     y="698"
+     id="text54">Java SDK + C/C++ 桥接</text>
+  <text
+     class="tiny"
+     x="727.80121"
+     y="722"
+     id="text55">Arrow C Data 边界、向量化快路径</text>
+  <!-- ⑤ → 对象存储 -->
+  <line
+     class="line"
+     x1="863.80121"
+     y1="734"
+     x2="863.80121"
+     y2="786"
+     marker-end="url(#arw)"
+     id="line55" />
+  <text
+     class="lbl"
+     x="875.80121"
+     y="764"
+     id="text56">读 data file（Parquet）</text>
+  <rect
+     class="panel"
+     x="707.80121"
+     y="788"
+     width="312"
+     height="62"
+     rx="12"
+     id="rect56" />
+  <text
+     class="h2"
+     x="727.80121"
+     y="818"
+     id="text57">对象存储 S3 / OBS</text>
+  <text
+     class="tiny"
+     x="727.80121"
+     y="840"
+     id="text58">metadata · manifest · data file</text>
 </svg>
