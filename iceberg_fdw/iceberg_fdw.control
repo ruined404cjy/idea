@@ -1,0 +1,5 @@
+# iceberg_fdw extension —— Iceberg 湖表只读外表封装器
+comment = 'foreign-data wrapper for read-only Iceberg tables'
+default_version = '1.0'
+module_pathname = '$libdir/iceberg_fdw'
+relocatable = true
