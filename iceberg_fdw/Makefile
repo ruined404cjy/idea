@@ -14,7 +14,7 @@
 # （access/htap/borrow_mem_pool.h 等），待其补全后可启用 USE_PGXS 分支。
 
 MODULE_big = iceberg_fdw
-OBJS       = iceberg_fdw.o option.o
+OBJS       = iceberg_fdw.o option.o catalog.o
 
 EXTENSION = iceberg_fdw
 DATA      = iceberg_fdw--1.0.sql

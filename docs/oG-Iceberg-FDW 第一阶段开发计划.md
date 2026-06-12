@@ -1,6 +1,13 @@
-# openGauss Iceberg FDW 第一阶段开发计划
+# openGauss Iceberg FDW 当期开发计划（6.18）
 
-本文给出 Iceberg FDW core 第一阶段的开发任务分解，可分段开发、局部验证、断点续作。接口命名与签名以 `oG-Iceberg-FDW core 接口清单（对外·内部·参数）.md` 为准，范围与设计点以 `oG-Iceberg-FDW 概要设计与决策点（讨论待定版）.md` 为准。
+本文给出 Iceberg FDW core 当期的开发任务分解，按阶段（phase）分段开发、局部验证、断点续作。范围与口径以本仓《5. Iceberg_FDW 详细设计》《Iceberg-SDK-能力核实（临时）》《oG-Iceberg-FDW SDK 接口与下推参数》为准。
+
+下列为**参考（非遵从）**来源，仅借鉴实现思路，不构成本期范围或接口约束：
+
+- `ref-iceberg-fdw-managed-fullscan-implementation-design.md`（andy123552）：managed Iceberg 表的全表扫描方案。其谓词复核（SDK filter 仅剪枝、全部 qual 本地 recheck）、`fdw_private` 序列化分槽、type/operator adapter 分层值得借鉴；但其 managed DDL/事务 hook、建表即写 Iceberg metadata 的范围**本期不采纳**——本期为只读扫描，元信息经系统表查询获得。
+- `ref-fdw-catalog-required-fields.md`（andy123552）：catalog 必需字段清单（`tables_internal`/`table_schemas`/`snapshots`），与本期系统表取数字段对齐参考。
+- `Iceberg_Java_SDK_Data_Reading_Guide.md`（本仓）：Java SDK 读取路径指引。
+- `ref-FallMoo-d2a67c3.patch`（FallMoo）：`NativeIcebergReader` 向量化/行式回退读取实证代码，佐证《能力核实》关于 Record→Arrow 须自写的结论。
 
 ## 1. 目标与范围
 
@@ -15,7 +22,7 @@
 | 项 | 本期处理 | 说明 |
 | --- | --- | --- |
 | 输出形态 | 行式 `Arrow → HeapTuple` | 不实现向量化输出 `VecIterateForeignScan`，仅留接口形态 |
-| Reader | Java SDK + C/C++ 桥接 | 按文档6 路径；Arrow C Data Interface 为 FDW↔Reader 边界 |
+| Reader | Java SDK + C/C++ 桥接 | 按《fdw-iceberg-sdk-arrow_design.md》路径；Arrow C Data Interface 为 FDW↔Reader 边界 |
 | 列裁剪 | 实现 | `retrievedAttrs` 译为 Reader 投影列名 |
 | 谓词下推 | 实现，全部下推 | 暂定输入无复杂表达式，谓词拆分全归 remote、local 为空 |
 | delete file | 不读取 | Java 向量化快路径不支持 delete；行式回退路径后续阶段启用 |
@@ -27,9 +34,11 @@
 
 六个核心回调：`GetForeignRelSize`、`GetForeignPaths`、`GetForeignPlan`、`BeginForeignScan`、`IterateForeignScan`、`EndForeignScan`。
 
-### 1.3 谓词下推前提
+### 1.3 谓词下推与复核
 
-本期假设输入谓词均为可被 Reader 精确求值的简单谓词（AND 合取的 `col OP const`、`col IS [NOT] NULL`、`col IN (...)`）。`classifyConditions` 中 `is_foreign_expr` 恒为真，全部谓词序列化进 `IcebergPrivPushedFilter`，节点 qual 为空。Reader 对下推谓词做精确行过滤，故无需执行器二次过滤。若后续引入无法精确求值的谓词，须回退为节点 qual，该回退路径本期不构造。
+本期假设输入谓词均为简单谓词（AND 合取的 `col OP const`、`col IS [NOT] NULL`、`col IN (...)`）。`classifyConditions` 中 `is_foreign_expr` 恒为真，全部谓词序列化进 `IcebergPrivPushedFilter` 下推给 Reader。
+
+但向量化路径的下推**仅用于 I/O 裁剪**（manifest / 文件 / row-group 三级跳过），不做行级精确过滤（依据《Iceberg-SDK-能力核实》§2.4、§5.1）。因此全部原始谓词**同时保留为 `ForeignScan` 节点 qual**，由执行器 `ExecQual` 逐行复核兜底——下推与本地 qual **并存而非互斥**，否则会多返回存活 row-group 内不匹配的行。后续若引入无法下推的谓词，则该谓词只保留本地 qual、不进 `pushedFilter`。
 
 ## 2. 开发组织与代码落位
 
@@ -40,7 +49,7 @@ FDW core 以 extension 插件形式链接 openGauss，经 `handler` 返回 `FdwR
 ### 2.2 代码落位策略
 
 - FDW 独立代码置于 myidea 仓库开发分支，独立于 openGauss 主体演进。
-- Reader 取数后端按文档6 路径确定为 Java SDK + C/C++ 桥接：JNI 封装 + 内嵌 JVM 单例 + Arrow C Data 导入，FDW 经统一三接口驱动。
+- Reader 取数后端按《fdw-iceberg-sdk-arrow_design.md》路径确定为 Java SDK + C/C++ 桥接：JNI 封装 + 内嵌 JVM 单例 + Arrow C Data 导入，FDW 经统一三接口驱动。
 - 与 openGauss 内核耦合的部分（`fdwapi.h`、`RelOptInfo`、`ForeignScanState`、`TupleTableSlot` 等结构与 `make_foreignscan`/`ExecStoreHeapTuple` 等内核函数）不预设完全 mock：开发中逐项确认哪些能力可在 extension 内承载、哪些须侵入内核修改，对前者直接对接，对后者再决定避免、mock 或提出内核改动。
 - 桥接层与转换层可先以构造的 Arrow 批做单元测试，使 FDW core 逻辑在脱离实例的环境独立验证；真实 SDK 联调与实例联调随集成推进。
 
@@ -82,25 +91,25 @@ iceberg_fdw/
 - `GetForeignRelSize`：`IcebergGetTableIdentity(foreigntableid)` 取表身份，暂存 `baserel->fdw_private`；`IcebergGetTableCardinality` 取基数（来源待定，本期固定选择率兜底），写 `baserel->rows`。
 - `GetForeignPaths`：登记单条全表扫描 `ForeignPath`；写成可追加多路径的形态，为后续索引路径预留。
 - `GetForeignPlan`：
-  - `IcebergCatalogResolveTable(ident)` 点查 `tables`，取 `metadata_location`/`current_snapshot_id`/`current_schema_id`/`table_uuid`/`table_location`；
+  - `IcebergCatalogResolveTable(ident)` 点查 `tables_internal`，取 `metadata_location`/`current_snapshot_id`/`current_schema_id`/`table_uuid`/`table_location`；
   - `BuildRetrievedAttrs(baserel)` 由 `reltarget` 算投影列 attno；
-  - `classifyConditions(scan_clauses)` 本期全归 remote，`SerializeFilter` 序列化进 `IcebergPrivPushedFilter`，`local_exprs` 为空；
+  - `classifyConditions(scan_clauses)` 本期可下推谓词全归 remote，`SerializeFilter` 序列化进 `IcebergPrivPushedFilter`；同时 `local_exprs = extract_actual_clauses(scan_clauses, false)` 取**全部**原始谓词作节点 qual 供执行器复核（下推 ≠ 移除本地 qual，见 §1.3）；
   - 装配 `fdw_private = list_make3(scanEntry, retrievedAttrs, pushedFilter)`；
-  - `make_foreignscan(tlist, local_exprs, scanrelid, NIL, fdw_private, …, outer_plan)`（`outer_plan` 为 openGauss 特有末参）。
+  - `make_foreignscan(tlist, local_exprs, scanrelid, NIL, fdw_private, …, outer_plan)`（第二参 `local_exprs` 即节点 qual，本期含全部谓词；`outer_plan` 为 openGauss 特有末参）。
 - Catalog 访问本期以 mock 元信息或测试表承接，待元信息表落地后切换。
 
 验证：`EXPLAIN VERBOSE` 计划节点为 ForeignScan；以日志打印解码后的 `scanEntry`、`retrievedAttrs`、`pushedFilter` 字段正确。
 
 ### 阶段三：SDK / 桥接层与 Arrow C Data 边界
 
-目标：按文档6 路径打通 Java SDK + C/C++ 桥接，固定 Reader 边界接口。
+目标：按《fdw-iceberg-sdk-arrow_design.md》路径打通 Java SDK + C/C++ 桥接，固定 Reader 边界接口。
 
-- 按 core 接口清单签名实现三接口：
+- 按《oG-Iceberg-FDW SDK 接口与下推参数》签名实现三接口：
   - `iceberg_scan_open(cxt, metadata_location, storage_config, columns, n_columns, filter, out_schema)`
   - `iceberg_scan_next(scan, out_array, out_schema)` 返回 `int nrows`（0=结束）
   - `iceberg_scan_close(scan)`
 - 桥接层：JNI 封装四个 Java 方法（`openTable`/`readNextBatch`/`releaseBatch`/`close`）；内嵌 JVM 单例（`pthread_once` 初始化，classpath 经 GUC 配置）；`JNIEnv*` 按线程缓存于 TLS；每次 JNI 调用后 `ExceptionCheck` 转 `ereport`。
-- Java 侧：`TableMetadataParser.read` 加载 metadata → `newScan` → 向量化读 Parquet → `Data.exportVector` 导出 Arrow C Data；含 delete file 时本期报清晰错误（行式回退后续）。
+- Java 侧：`TableMetadataParser.read` 加载 metadata → `newScan` → 向量化读 Parquet → `Data.exportVector` 导出 Arrow C Data；含 delete file（MOR 表）本期不支持（行式回退路径后续阶段启用）。
 - 可先用构造 Arrow 批的桩替身验证桥接调用与转换层，再接入真实 SDK。
 
 验证：`open → next* → close` 读出 Arrow 批；JVM 仅初始化一次；异常经 `ExceptionCheck` 转 PG ERROR。
