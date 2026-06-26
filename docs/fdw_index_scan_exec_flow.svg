@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="760" font-family="sans-serif" font-size="13">
+  <style>
+    .box{fill:#fff;stroke:#333;stroke-width:1.5;rx:6;}
+    .plan{fill:#eef5ff;stroke:#2f6fb3;}
+    .exec{fill:#eefbf0;stroke:#2e8b57;}
+    .bridge{fill:#fff5e8;stroke:#cc7a00;}
+    .mock{fill:#fde8ec;stroke:#b3324f;stroke-dasharray:5 3;}
+    .lbl{font-weight:bold;}
+    .small{font-size:11px;fill:#444;}
+    text{fill:#111;}
+  </style>
+
+  <!-- 泳道标题 -->
+  <text x="20" y="30" class="lbl" fill="#2f6fb3">规划期（fdw_private 及以上）— Andy / 上游 mock</text>
+  <text x="20" y="300" class="lbl" fill="#2e8b57">执行器（本次交付，从 BeginForeignScan 起）</text>
+  <text x="20" y="560" class="lbl" fill="#cc7a00">下游 bridge v3（真实 .so / mock .so）</text>
+
+  <!-- 规划期 -->
+  <rect class="box plan" x="40" y="45" width="380" height="52"/>
+  <text x="52" y="66">SQL：SELECT ... ORDER BY embedding &lt;-&gt; q LIMIT k</text>
+  <text x="52" y="86" class="small">向量近邻查询，q 为查询向量</text>
+
+  <rect class="box mock" x="40" y="115" width="380" height="62"/>
+  <text x="52" y="135" class="lbl" fill="#b3324f">① 上游 mock 点</text>
+  <text x="52" y="153" class="small">kernel VectorSearch（真实）或 debug GUC（mock）：</text>
+  <text x="52" y="169" class="small">baserel-&gt;fdw_private = IcebergFdwIndexPathInfo{index_name, q, k, metric}</text>
+
+  <rect class="box plan" x="40" y="195" width="380" height="44"/>
+  <text x="52" y="221">GetForeignPaths：info 完整 → VECTOR_INDEX 路径</text>
+
+  <rect class="box plan" x="480" y="195" width="380" height="44"/>
+  <text x="492" y="215">GetForeignPlan：icebergBuildIndexScanPrivate</text>
+  <text x="492" y="232" class="small">→ fdw_private(List)：[1, [index_name, vcol, metric, k, fetch_k, q]]</text>
+
+  <!-- 执行器 -->
+  <rect class="box exec" x="480" y="315" width="380" height="62"/>
+  <text x="492" y="335">BeginForeignScan：反序列化 fdw_private</text>
+  <text x="492" y="353" class="small">+ iceberg_catalog_get_table_info → metadata_location</text>
+  <text x="492" y="369" class="small">→ 组 IcebergIndexScanRequest（含 metadata_location）</text>
+
+  <rect class="box exec" x="480" y="395" width="380" height="44"/>
+  <text x="492" y="421">iceberg_index_scan_open（index_scan_adapter）</text>
+
+  <rect class="box exec" x="40" y="395" width="380" height="86"/>
+  <text x="52" y="415">IterateForeignScan</text>
+  <text x="52" y="433" class="small">iceberg_index_scan_next → 取批</text>
+  <text x="52" y="451" class="small">materialize：iceberg_arrow_materialize_projection_row</text>
+  <text x="52" y="467" class="small">按 projected_columns 列序映射、丢弃尾部 _distance → slot</text>
+
+  <rect class="box exec" x="40" y="500" width="380" height="40"/>
+  <text x="52" y="525">EndForeignScan：scan_close → storage_release</text>
+
+  <!-- bridge -->
+  <rect class="box mock" x="480" y="575" width="380" height="46"/>
+  <text x="492" y="595" class="lbl" fill="#b3324f">② 下游 mock 点</text>
+  <text x="492" y="612" class="small">ICEBERG_RUST_BRIDGE_SO → 真实或 mock_index_bridge.so</text>
+
+  <rect class="box bridge" x="480" y="635" width="380" height="46"/>
+  <text x="492" y="655">storage_open（复用 full scan 的 storage_config_json）</text>
+  <text x="492" y="672" class="small">iceberg_bridge_storage_open</text>
+
+  <rect class="box bridge" x="480" y="695" width="380" height="46"/>
+  <text x="492" y="715">search_vector_by_metadata → IcebergIndexScan*</text>
+  <text x="492" y="732" class="small">(metadata_location, index_name) 定位；不传列名</text>
+
+  <rect class="box bridge" x="40" y="635" width="380" height="60"/>
+  <text x="52" y="657">metadata_scan_next_batch</text>
+  <text x="52" y="675" class="small">输出 ArrowArray：表全部列 + 尾部 _distance</text>
+  <text x="52" y="690" class="small">metadata_scan_rescan / metadata_scan_close</text>
+
+  <!-- 箭头 -->
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#333"/></marker></defs>
+  <g stroke="#333" stroke-width="1.5" fill="none" marker-end="url(#a)">
+    <line x1="230" y1="97" x2="230" y2="113"/>
+    <line x1="230" y1="177" x2="230" y2="193"/>
+    <line x1="420" y1="217" x2="478" y2="217"/>
+    <line x1="670" y1="239" x2="670" y2="313"/>
+    <line x1="670" y1="377" x2="670" y2="393"/>
+    <line x1="670" y1="439" x2="670" y2="573"/>
+    <line x1="670" y1="621" x2="670" y2="633"/>
+    <line x1="670" y1="681" x2="670" y2="693"/>
+    <!-- search 回到执行器 iterate -->
+    <line x1="478" y1="417" x2="230" y2="417" stroke-dasharray="0"/>
+    <!-- next_batch 数据面回到 materialize -->
+    <line x1="430" y1="660" x2="455" y2="660"/>
+    <line x1="230" y1="633" x2="230" y2="545"/>
+  </g>
+  <text x="250" y="412" class="small">scan 句柄</text>
+  <text x="232" y="600" class="small">批数据↑</text>
+</svg>
