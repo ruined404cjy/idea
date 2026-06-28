@@ -1,0 +1,147 @@
+diff --git a/src/iceberg_fdw.cpp b/src/iceberg_fdw.cpp
+index 334a19c..9d9559b 100644
+--- a/src/iceberg_fdw.cpp
++++ b/src/iceberg_fdw.cpp
+@@ -1191,131 +1191,21 @@ icebergFindColumnMappingByAttnum(List *column_mappings, AttrNumber attnum)
+     return NULL;
+ }
+ 
+-static const VectorSearchTopKInfo *
+-icebergFindVectorTopKInfo(PlannerInfo *root, RelOptInfo *baserel)
+-{
+-    ListCell *lc;
+-
+-    if (root == NULL || baserel == NULL) {
+-        return NULL;
+-    }
+-
+-    foreach (lc, root->vectorsearch_topk_infos) {
+-        VectorSearchTopKInfo *info = (VectorSearchTopKInfo *)lfirst(lc);
+-
+-        if (info != NULL && info->relid == baserel->relid && info->vector_attnum > 0 &&
+-            info->query_vector != NULL && info->query_dim > 0 && info->topK > 0) {
+-            return info;
+-        }
+-    }
+-    return NULL;
+-}
+-
+-static float *
+-icebergParseVectorTopKQuery(MemoryContext cxt, const char *query_vector, int query_dim, uint32 *out_len)
+-{
+-    MemoryContext old_cxt;
+-    float *values;
+-    char *cursor;
+-    char *raw;
+-    int parsed = 0;
+-
+-    if (out_len != NULL) {
+-        *out_len = 0;
+-    }
+-    if (query_vector == NULL || query_dim <= 0) {
+-        return NULL;
+-    }
+-
+-    old_cxt = MemoryContextSwitchTo(cxt);
+-    values = (float *)palloc0(sizeof(float) * query_dim);
+-    raw = pstrdup(query_vector);
+-    cursor = raw;
+-    while (parsed < query_dim && cursor != NULL && *cursor != '\0') {
+-        char *endptr = NULL;
+-
+-        values[parsed] = strtof(cursor, &endptr);
+-        if (endptr == cursor) {
+-            MemoryContextSwitchTo(old_cxt);
+-            return NULL;
+-        }
+-        parsed++;
+-        cursor = endptr;
+-        while (*cursor == ' ' || *cursor == '\t') {
+-            cursor++;
+-        }
+-        if (*cursor == ',') {
+-            cursor++;
+-        } else if (*cursor != '\0') {
+-            MemoryContextSwitchTo(old_cxt);
+-            return NULL;
+-        }
+-    }
+-    MemoryContextSwitchTo(old_cxt);
+-
+-    if (parsed != query_dim) {
+-        return NULL;
+-    }
+-    if (out_len != NULL) {
+-        *out_len = (uint32)parsed;
+-    }
+-    return values;
+-}
+-
++/*
++ * [PR#3 BUILD STUB] andy 的向量索引发现依赖内核 PR#3 的 root->vectorsearch_topk_infos /
++ * VectorSearchTopKInfo。若本机内核尚无该字段，FDW main 编不过。本补丁仅为在缺 PR#3 的内核上
++ * 完成 2×2 自测：移除发现/解析函数，icebergBuildVectorPathInfo 直接返回 NULL（向量发现改由
++ * mock shim 驱动）。内核合入 PR#3 后请勿应用本补丁。
++ */
+ static IcebergFdwPathInfo *
+ icebergBuildVectorPathInfo(PlannerInfo *root, RelOptInfo *baserel, Oid foreigntableid,
+     IcebergFdwPlanState *plan_state)
+ {
+-    const VectorSearchTopKInfo *topk_info;
+-    IcebergFdwColumnMapping *mapping;
+-    IcebergFdwOptions options;
+-    IcebergVectorIndexMatchRequest match_request;
+-    IcebergFdwIndexPathInfo *vector_info = NULL;
+-    IcebergFdwPathInfo *path_info;
+-    uint32 query_len = 0;
+-
+-    topk_info = icebergFindVectorTopKInfo(root, baserel);
+-    if (topk_info == NULL) {
+-        return NULL;
+-    }
+-
+-    mapping = icebergFindColumnMappingByAttnum(plan_state->column_mappings, topk_info->vector_attnum);
+-    if (mapping == NULL || mapping->field_name == NULL || mapping->field_name[0] == '\0') {
+-        return NULL;
+-    }
+-
+-    memset(&options, 0, sizeof(options));
+-    icebergGetOptions(foreigntableid, &options);
+-    memset(&match_request, 0, sizeof(match_request));
+-    match_request.storage_config_json = icebergBuildBridgeStorageConfigJson(&options);
+-    match_request.metadata_location = plan_state->table_info.metadata_location;
+-    match_request.namespace_name = plan_state->table_info.namespace_name;
+-    match_request.table_name = plan_state->table_info.table_name;
+-    match_request.vector_column_name = mapping->field_name;
+-
+-    if (!iceberg_vector_index_match_available(CurrentMemoryContext, &match_request, &vector_info) ||
+-        vector_info == NULL || !vector_info->valid ||
+-        vector_info->index_name == NULL || vector_info->index_name[0] == '\0') {
+-        return NULL;
+-    }
+-
+-    vector_info->query_vector =
+-        icebergParseVectorTopKQuery(CurrentMemoryContext, topk_info->query_vector, topk_info->query_dim, &query_len);
+-    if (vector_info->query_vector == NULL || query_len == 0) {
+-        return NULL;
+-    }
+-    vector_info->query_vector_len = query_len;
+-    vector_info->metric = ICEBERG_FDW_VECTOR_METRIC_L2;
+-    vector_info->k = (uint32)topk_info->topK;
+-    vector_info->fetch_k = (uint32)topk_info->fetchK;
+-    vector_info->valid = icebergVectorIndexInfoIsComplete(vector_info);
+-    if (!vector_info->valid) {
+-        return NULL;
+-    }
+-
+-    path_info = icebergMakePathInfo(ICEBERG_FDW_SCAN_VECTOR_INDEX);
+-    path_info->vector_index = vector_info;
+-    return path_info;
++    (void)root;
++    (void)baserel;
++    (void)foreigntableid;
++    (void)plan_state;
++    return NULL;
+ }
+ 
+ static IcebergFdwPathInfo *

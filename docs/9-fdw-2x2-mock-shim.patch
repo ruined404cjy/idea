@@ -1,0 +1,182 @@
+diff --git a/src/iceberg_fdw.cpp b/src/iceberg_fdw.cpp
+index 334a19c..6ab2543 100644
+--- a/src/iceberg_fdw.cpp
++++ b/src/iceberg_fdw.cpp
+@@ -141,6 +141,14 @@ static const IcebergValidOption valid_options[] = {
+     {"namespace", ForeignTableRelationId},
+     {"table_name", ForeignTableRelationId},
+     {"snapshot_id", ForeignTableRelationId},
++    /* 测试脚手架:规划期合成向量/标量索引 path（见 icebergTryBuildMockIndexPath）。 */
++    {"mock_index_scan", ForeignTableRelationId},
++    {"mock_index_name", ForeignTableRelationId},
++    {"mock_vector_column", ForeignTableRelationId},
++    {"mock_query_vector", ForeignTableRelationId},
++    {"mock_topk", ForeignTableRelationId},
++    {"mock_scalar_expr", ForeignTableRelationId},
++    {"mock_scalar_column", ForeignTableRelationId},
+     {"s3_endpoint", ForeignServerRelationId},
+     {"s3_region", ForeignServerRelationId},
+     {"s3_access_key_id", ForeignServerRelationId},
+@@ -1434,6 +1442,149 @@ icebergGetForeignPaths(PlannerInfo *root, RelOptInfo *baserel, Oid foreigntablei
+         plan_state->startup_cost, plan_state->total_cost, NIL, NULL, NULL, NIL));
+ }
+ 
++/*
++ * 测试脚手架（option 门控）：规划期合成向量/标量索引 path info，使普通 SELECT 即可驱动
++ * BeginForeignScan→bridge 的索引执行器，绕开尚未就绪的规划期发现/注入。
++ * 仅当外表带 mock_index_scan='vector'|'scalar' 时生效，生产路径不受影响。
++ * TODO: 规划期索引发现/注入（向量 query_vector、标量谓词→表达式）就绪后移除本 shim。
++ */
++static char *
++icebergGetTableOption(Oid foreigntableid, const char *key)
++{
++    ForeignTable *table = GetForeignTable(foreigntableid);
++    ListCell *lc;
++
++    foreach (lc, table->options) {
++        DefElem *def = (DefElem *)lfirst(lc);
++
++        if (strcmp(def->defname, key) == 0) {
++            return defGetString(def);
++        }
++    }
++    return NULL;
++}
++
++/* 把逗号分隔的浮点串解析为 palloc 的 float 数组。 */
++static float *
++icebergParseFloatCsv(const char *csv, int *out_len)
++{
++    char *buf = pstrdup(csv);
++    char *saveptr = NULL;
++    char *token;
++    List *values = NIL;
++    ListCell *lc;
++    float *result;
++    int i = 0;
++
++    for (token = strtok_r(buf, ",", &saveptr); token != NULL;
++         token = strtok_r(NULL, ",", &saveptr)) {
++        float *v = (float *)palloc(sizeof(float));
++
++        *v = (float)strtod(token, NULL);
++        values = lappend(values, v);
++    }
++
++    *out_len = list_length(values);
++    if (*out_len == 0) {
++        ereport(ERROR,
++            (errcode(ERRCODE_FDW_ERROR), errmsg("iceberg_fdw mock_query_vector is empty")));
++    }
++
++    result = (float *)palloc(sizeof(float) * (*out_len));
++    foreach (lc, values) {
++        result[i++] = *(float *)lfirst(lc);
++    }
++    return result;
++}
++
++/* mock_index_scan='vector'：合成向量索引 path（见 IcebergFdwIndexPathInfo）。 */
++static IcebergFdwPathInfo *
++icebergBuildMockVectorPath(Oid foreigntableid)
++{
++    char *index_name = icebergGetTableOption(foreigntableid, "mock_index_name");
++    char *vector_column = icebergGetTableOption(foreigntableid, "mock_vector_column");
++    char *query_vector_csv = icebergGetTableOption(foreigntableid, "mock_query_vector");
++    char *topk_str = icebergGetTableOption(foreigntableid, "mock_topk");
++    IcebergFdwIndexPathInfo *vector_index;
++    IcebergFdwPathInfo *path_info;
++    int query_vector_len = 0;
++    int topk;
++
++    if (index_name == NULL || vector_column == NULL || query_vector_csv == NULL || topk_str == NULL) {
++        ereport(ERROR,
++            (errcode(ERRCODE_FDW_ERROR),
++                errmsg("iceberg_fdw mock_index_scan='vector' requires mock_index_name, "
++                       "mock_vector_column, mock_query_vector and mock_topk")));
++    }
++    topk = atoi(topk_str);
++    if (topk <= 0) {
++        ereport(ERROR,
++            (errcode(ERRCODE_FDW_ERROR), errmsg("iceberg_fdw mock_topk must be positive")));
++    }
++
++    vector_index = (IcebergFdwIndexPathInfo *)palloc0(sizeof(IcebergFdwIndexPathInfo));
++    vector_index->valid = true;
++    vector_index->index_name = pstrdup(index_name);
++    vector_index->vector_column_name = pstrdup(vector_column);
++    vector_index->query_vector = icebergParseFloatCsv(query_vector_csv, &query_vector_len);
++    vector_index->query_vector_len = (uint32)query_vector_len;
++    vector_index->metric = ICEBERG_FDW_VECTOR_METRIC_L2;
++    vector_index->k = (uint32)topk;
++    vector_index->fetch_k = (uint32)topk;
++
++    path_info = icebergMakePathInfo(ICEBERG_FDW_SCAN_VECTOR_INDEX);
++    path_info->vector_index = vector_index;
++    return path_info;
++}
++
++/*
++ * mock_index_scan='scalar'：合成标量索引 path。mock_scalar_expr 直接提供 bridge 标量表达式
++ * JSON（执行期转发给 search_scalar_by_metadata），mock_scalar_column 仅供 EXPLAIN 标注。
++ */
++static IcebergFdwPathInfo *
++icebergBuildMockScalarPath(Oid foreigntableid)
++{
++    char *index_name = icebergGetTableOption(foreigntableid, "mock_index_name");
++    char *expression_json = icebergGetTableOption(foreigntableid, "mock_scalar_expr");
++    char *scalar_column = icebergGetTableOption(foreigntableid, "mock_scalar_column");
++    IcebergFdwScalarIndexPathInfo *scalar_index;
++    IcebergFdwPathInfo *path_info;
++
++    if (index_name == NULL || expression_json == NULL) {
++        ereport(ERROR,
++            (errcode(ERRCODE_FDW_ERROR),
++                errmsg("iceberg_fdw mock_index_scan='scalar' requires mock_index_name and mock_scalar_expr")));
++    }
++
++    scalar_index = (IcebergFdwScalarIndexPathInfo *)palloc0(sizeof(IcebergFdwScalarIndexPathInfo));
++    scalar_index->valid = true;
++    scalar_index->index_name = pstrdup(index_name);
++    scalar_index->column_name = scalar_column != NULL ? pstrdup(scalar_column) : NULL;
++    scalar_index->index_filter = NULL;
++    scalar_index->expression_json = pstrdup(expression_json);
++
++    path_info = icebergMakePathInfo(ICEBERG_FDW_SCAN_SCALAR_INDEX);
++    path_info->scalar_index = scalar_index;
++    return path_info;
++}
++
++static IcebergFdwPathInfo *
++icebergTryBuildMockIndexPath(Oid foreigntableid)
++{
++    char *gate = icebergGetTableOption(foreigntableid, "mock_index_scan");
++
++    if (gate == NULL) {
++        return NULL;
++    }
++    if (pg_strcasecmp(gate, "vector") == 0) {
++        return icebergBuildMockVectorPath(foreigntableid);
++    }
++    if (pg_strcasecmp(gate, "scalar") == 0) {
++        return icebergBuildMockScalarPath(foreigntableid);
++    }
++    return NULL;
++}
++
+ static ForeignScan *
+ icebergGetForeignPlan(PlannerInfo *root, RelOptInfo *baserel, Oid foreigntableid,
+     ForeignPath *best_path, List *tlist, List *scan_clauses, Plan *outer_plan)
+@@ -1458,7 +1609,11 @@ icebergGetForeignPlan(PlannerInfo *root, RelOptInfo *baserel, Oid foreigntableid
+      * 单路径选择：优化器（GetForeignPaths）命中索引时把 IcebergFdwIndexPathInfo 写入
+      * baserel->fdw_private；未命中保持 NULL 走 full scan。标量 qual 两种路径均留作 local recheck。
+      */
+-    path_info = plan_state->path_info;
++    /* 测试脚手架优先：option 命中则用合成的索引 path（见 icebergTryBuildMockIndexPath）。 */
++    path_info = icebergTryBuildMockIndexPath(foreigntableid);
++    if (path_info == NULL) {
++        path_info = plan_state->path_info;
++    }
+     if (path_info != NULL && path_info->scan_method == ICEBERG_FDW_SCAN_VECTOR_INDEX &&
+         icebergVectorIndexInfoIsComplete(path_info->vector_index)) {
+         fdw_private = icebergBuildIndexScanPrivate(path_info->vector_index);
