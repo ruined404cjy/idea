@@ -1,0 +1,17 @@
+<section id="storage" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">组内工作</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">存储侧实验</h2>
+</div>
+<table style="font-family:'Noto Sans SC', Arial, sans-serif;font-size:24px;color:#1B2530">
+<tr style="background:#ECEAE3"><th style="width:13%;padding:12px 18px;text-align:left">实验</th><th style="width:29%;text-align:left">目的</th><th style="width:29%;text-align:left">工作</th><th style="width:29%;text-align:left">结果</th></tr>
+<tr><td><b>摄入对账</b></td><td>trace 从产生到入库不丢失、不重复</td><td>经 Collector 写入 openGauss，发送清单与库内数据做差集</td><td>10 traces / 69 spans 全部入库，差集为 0</td></tr>
+<tr><td><b>列存写入</b></td><td>持续追加写入的吞吐与完整性</td><td>50 万 spans 写入 xstore 列存，exporter 多路并行</td><td>无丢失；8 路并行 10,316 rows/s</td></tr>
+<tr><td><b>查询去重</b></td><td>OTLP 重试会产生重复 span，查询须得到唯一结果</td><td>只追加、不建主键，查询时按 (trace_id, span_id) 取最新版本</td><td>先过滤再去重：约 4 s 降至 141–257 ms</td></tr>
+<tr><td><b>图查询</b></td><td>按调用关系取整棵 trace 树，做跨 trace 关联</td><td>span 父子关系存为图的边，用 Cypher 查询，与列存对比</td><td>取整树快 23 倍；取 payload 慢 1.5 倍，图只做关系查询层</td></tr>
+<tr><td><b>payload 存储</b></td><td>prompt / response 等长文本占主要体积</td><td>对比同表、拆表、外置等布局；分析 3,600 条真实轨迹</td><td>每次 LLM 调用记录完整上下文时，存储量是只记录增量的 53.15 倍</td></tr>
+</table>
+<div style="flex:1"></div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5F6873">来源：exporter_demo、agent-trace-graph-test、agent-trace-research 仓库实验报告</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">06</p>
+</section>

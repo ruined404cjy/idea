@@ -1,0 +1,31 @@
+<section id="fa-task" data-transition="fade" style="background:#ECEAE3;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">失败归因</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">失败归因：Who&amp;When</h2>
+</div>
+<div style="display:flex;gap:56px;flex:1">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="background:#FDFDFB;border-radius:16px;padding:24px">
+<img src="/_blob/02455829d7e69ece7ef8e3b1538541c4" alt="Who&amp;When 任务示意：多智能体系统执行任务产生失败日志，人工或自动归因，输出责任 Agent 与决定性错误 Step" style="width:720px;height:450px;object-fit:contain">
+</div>
+<p style="font-size:24px;color:#5F6873">图：Who&amp;When 论文任务示意（arXiv:2505.00212）</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;line-height:1.5">给定一条失败的多 agent 执行轨迹，找出<b>责任 agent</b>（who）和引入<b>决定性错误的步骤</b>（when）。</p>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">Who&amp;When（ICML 2025）：184 条人工标注失败轨迹，任务来自 GAIA 与 AssistantBench</p>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border-radius:16px;padding:28px 32px">
+<p style="font-size:88px;font-weight:700;line-height:1;color:#2B5F9E">69.05%</p>
+<p style="font-size:28px;color:#4A5563">agent 级准确率</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border-radius:16px;padding:28px 32px">
+<p style="font-size:88px;font-weight:700;line-height:1;color:#A84A14">21.43%</p>
+<p style="font-size:28px;color:#4A5563">步骤级准确率</p>
+</div>
+</div>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">All-at-Once（整条轨迹交给 LLM 一次判断），DeepSeek-V4.1-Flash，算法生成子集 126 例。人工构造子集轨迹更长，步骤级准确率为 5.17%。</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5F6873">来源：github.com/mototale/Agents_Failure_Attribution 基线复跑</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">07</p>
+</section>

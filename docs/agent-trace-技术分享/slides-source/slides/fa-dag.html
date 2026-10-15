@@ -1,0 +1,80 @@
+<section id="fa-dag" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">失败归因</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">DAG 回溯：流程示例</h2>
+</div>
+<p style="font-size:28px;line-height:1.5">示例（虚构）：多 agent 系统计算“每人 10 元、10 人的总额”，最终输出 120 元，正确答案是 100 元。</p>
+<!-- nodes: c = 112, 400, 688, 976, 1264, 1552; top 100, 224x150 -->
+<div style="position:relative;width:1664px;height:250px">
+<svg aria-label="步骤之间的依赖边：回溯经过 5←4←3←1 与 5←3，未经过 0→1、0→2、2→3" style="position:absolute;left:0;top:0" width="1664" height="100" viewBox="0 0 1664 100">
+<defs>
+<marker id="g" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#9AA4AF" stroke="none"/></marker>
+<marker id="o" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#A84A14" stroke="none"/></marker>
+</defs>
+<path d="M 132 100 Q 251 40 370 92" fill="none" stroke="#9AA4AF" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#g)"/>
+<path d="M 152 100 Q 405 -10 658 92" fill="none" stroke="#9AA4AF" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#g)"/>
+<path d="M 718 100 Q 837 40 956 92" fill="none" stroke="#9AA4AF" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#g)"/>
+<path d="M 430 100 Q 683 -10 936 92" fill="none" stroke="#A84A14" stroke-width="4" marker-end="url(#o)"/>
+<path d="M 1006 100 Q 1120 40 1234 92" fill="none" stroke="#A84A14" stroke-width="4" marker-end="url(#o)"/>
+<path d="M 1026 100 Q 1269 -10 1512 92" fill="none" stroke="#A84A14" stroke-width="4" marker-end="url(#o)"/>
+<path d="M 1294 100 Q 1413 40 1532 92" fill="none" stroke="#A84A14" stroke-width="4" marker-end="url(#o)"/>
+</svg>
+<div style="position:absolute;left:0;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#ECEAE3;border:1px solid #DEDBD2;border-radius:12px;padding:14px 16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5F6873">Step 0</p>
+<p style="font-size:28px;font-weight:700;color:#4A5563">Planner</p>
+<p style="font-size:24px;color:#4A5563">先读人数再计算</p>
+</div>
+<div style="position:absolute;left:288px;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#F6E6DA;border:3px solid #A84A14;border-radius:12px;padding:12px 14px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A84A14">Step 1</p>
+<p style="font-size:28px;font-weight:700;color:#15202B">Reader</p>
+<p style="font-size:24px;color:#1B2530">人数是 12</p>
+</div>
+<div style="position:absolute;left:576px;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#ECEAE3;border:1px solid #DEDBD2;border-radius:12px;padding:14px 16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5F6873">Step 2</p>
+<p style="font-size:28px;font-weight:700;color:#4A5563">Searcher</p>
+<p style="font-size:24px;color:#4A5563">单价 10 元</p>
+</div>
+<div style="position:absolute;left:864px;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #7D8894;border-radius:12px;padding:13px 15px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5F6873">Step 3</p>
+<p style="font-size:28px;font-weight:700;color:#15202B">Calculator</p>
+<p style="font-size:24px;color:#1B2530">12 × 10 = 120</p>
+</div>
+<div style="position:absolute;left:1152px;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#FBFAF7;border:2px solid #7D8894;border-radius:12px;padding:13px 15px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5F6873">Step 4</p>
+<p style="font-size:28px;font-weight:700;color:#15202B">Verifier</p>
+<p style="font-size:24px;color:#1B2530">算式无误</p>
+</div>
+<div style="position:absolute;left:1440px;top:100px;width:224px;height:150px;display:flex;flex-direction:column;gap:4px;background:#E3ECF6;border:3px solid #2B5F9E;border-radius:12px;padding:12px 14px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#2B5F9E">Step 5</p>
+<p style="font-size:28px;font-weight:700;color:#15202B">Planner</p>
+<p style="font-size:24px;color:#1B2530">答案 120 元</p>
+</div>
+</div>
+<div style="display:flex;gap:32px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#E3ECF6;border:3px solid #2B5F9E;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">起点：失败表现</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#FBFAF7;border:2px solid #7D8894;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">已检查：本步无错误</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#F6E6DA;border:3px solid #A84A14;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">候选：本步引入错误</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#ECEAE3;border:1px solid #DEDBD2;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">未回溯</p></div>
+<p style="font-size:24px;color:#4A5563">实线：回溯经过的依赖边</p>
+</div>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:12px;padding:20px 24px">
+<p style="font-size:28px;font-weight:700;color:#15202B">1 构图</p>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">LLM 读完整轨迹，标出每一步用到了哪些前序步骤的结果</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:12px;padding:20px 24px">
+<p style="font-size:28px;font-weight:700;color:#15202B">2 确定起点</p>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">找到失败表现所在步：Step 5 答出 120 元，与正确答案不符</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:12px;padding:20px 24px">
+<p style="font-size:28px;font-weight:700;color:#15202B">3 回溯</p>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">沿依赖边反向遍历：5、4、3 本身无错误；Step 1 读错人数，记为候选</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:12px;padding:20px 24px">
+<p style="font-size:28px;font-weight:700;color:#15202B">4 裁决</p>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">只有一个候选，输出 Step 1；agent 由该步推出：Reader</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5F6873">来源：github.com/mototale/Agents_Failure_Attribution，docs/dag_backtrace_design.md</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">08</p>
+</section>

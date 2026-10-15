@@ -1,0 +1,52 @@
+<section id="fa-results" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">失败归因</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">DAG 回溯：结果</h2>
+</div>
+<div style="display:flex;gap:72px;flex:1">
+<div style="width:620px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-size:24px;font-weight:700;color:#7D8894">All-at-Once（基线）</p>
+<p style="font-size:28px;line-height:1.5">整条轨迹一次交给 LLM，直接回答哪个 agent、哪一步</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-size:24px;font-weight:700;color:#5F6873">Step-by-Step（基线）</p>
+<p style="font-size:28px;line-height:1.5">从第一步开始逐步判断“这一步是否出错”，在第一个判为出错的步骤处停止</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-size:24px;font-weight:700;color:#A84A14">DAG 回溯</p>
+<p style="font-size:28px;line-height:1.5">从失败点出发，只沿依赖边检查上游，不检查与失败无关的分支</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.5;color:#4A5563">token 消耗为基线的 2.3–4.8 倍；每个步骤级错误可归入“构图不可达 / 未回溯到 / 局部误判 / 裁决选错”四类之一，便于逐环节改进。</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:24px;font-weight:700;color:#5F6873">步骤级准确率（%）· DeepSeek-V4.1-Flash · 单次运行</p>
+<div style="display:flex;gap:28px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#B9C0C8;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">All-at-Once</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#7D8894;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">Step-by-Step</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#A84A14;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">DAG 回溯 v0.3</p></div>
+</div>
+<div style="display:flex;gap:72px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="height:330px;display:flex;align-items:flex-end;gap:16px;border-bottom:2px solid #5F6873">
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;color:#4A5563">21.43</p><div style="width:110px;height:129px;background:#B9C0C8"></div></div>
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;color:#4A5563">34.92</p><div style="width:110px;height:210px;background:#7D8894"></div></div>
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;font-weight:700;color:#A84A14">48.41</p><div style="width:110px;height:290px;background:#A84A14"></div></div>
+</div>
+<p style="font-size:24px;font-weight:700;text-align:center">算法生成（126 例）</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="height:330px;display:flex;align-items:flex-end;gap:16px;border-bottom:2px solid #5F6873">
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;color:#4A5563">5.17</p><div style="width:110px;height:31px;background:#B9C0C8"></div></div>
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;color:#4A5563">17.24</p><div style="width:110px;height:103px;background:#7D8894"></div></div>
+<div style="width:110px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;font-weight:700;color:#A84A14">29.31</p><div style="width:110px;height:176px;background:#A84A14"></div></div>
+</div>
+<p style="font-size:24px;font-weight:700;text-align:center">人工构造（58 例）</p>
+</div>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5F6873">来源：github.com/mototale/Agents_Failure_Attribution，experiments/v0.3</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">09</p>
+</section>

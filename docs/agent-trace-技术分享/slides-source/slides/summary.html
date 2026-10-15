@@ -1,0 +1,24 @@
+<section id="summary" data-transition="fade" style="background:#E9E5DA;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">小结</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">Agent Trace 的关键点</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:32px;flex:1">
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F4EF;border-radius:16px;padding:36px 40px">
+<p style="font-size:24px;font-weight:700;color:#A84A14">记录</p>
+<p style="font-size:30px;line-height:1.5;color:#1B2530">trace 是一次运行的结构化操作树，包含 chat 记录和 memory 中没有的结构、时间与状态信息</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F4EF;border-radius:16px;padding:36px 40px">
+<p style="font-size:24px;font-weight:700;color:#A84A14">存储</p>
+<p style="font-size:30px;line-height:1.5;color:#1B2530">OTel 统一数据模型与传输；存储侧是追加写入加时间范围分析，需处理去重和长 payload</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F4EF;border-radius:16px;padding:36px 40px">
+<p style="font-size:24px;font-weight:700;color:#A84A14">归因</p>
+<p style="font-size:30px;line-height:1.5;color:#1B2530">步骤级定位明显难于 agent 级；利用执行依赖结构可以提高步骤级准确率</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#F5F4EF;border-radius:16px;padding:36px 40px">
+<p style="font-size:24px;font-weight:700;color:#A84A14">无损记录</p>
+<p style="font-size:30px;line-height:1.5;color:#1B2530">可随时查阅的无损记录直接影响 agent 的任务表现；完整的结构化记录是评估与优化的依据</p>
+</div>
+</div>
+</section>

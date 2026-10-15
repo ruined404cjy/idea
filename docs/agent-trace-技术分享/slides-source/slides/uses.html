@@ -1,0 +1,28 @@
+<section id="uses" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">基础概念</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">Trace 的用途</h2>
+</div>
+<div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:16px;padding:40px">
+<div style="display:flex;align-items:center;gap:20px"><x-icon name="Activity" style="color:#A84A14;width:48px;height:48px"></x-icon><h3 style="font-size:40px;font-weight:700;line-height:1.2;color:#15202B">可观测性</h3></div>
+<p style="font-size:28px;line-height:1.5">总延迟由哪些步骤组成；各模型消耗多少 token 与成本</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:16px;padding:40px">
+<div style="display:flex;align-items:center;gap:20px"><x-icon name="Chart" style="color:#A84A14;width:48px;height:48px"></x-icon><h3 style="font-size:40px;font-weight:700;line-height:1.2;color:#15202B">评估</h3></div>
+<p style="font-size:28px;line-height:1.5">某个模型、agent 版本或工具在一段时间内的成功率与延迟分布；离线评测逐步打分</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:16px;padding:40px">
+<div style="display:flex;align-items:center;gap:20px"><x-icon name="Search" style="color:#A84A14;width:48px;height:48px"></x-icon><h3 style="font-size:40px;font-weight:700;line-height:1.2;color:#15202B">失败归因</h3></div>
+<p style="font-size:28px;line-height:1.5">失败发生在哪个模型或工具调用；哪个 agent、哪一步引入了决定性错误</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:16px;padding:40px">
+<div style="display:flex;align-items:center;gap:20px"><x-icon name="Database" style="color:#A84A14;width:48px;height:48px"></x-icon><h3 style="font-size:40px;font-weight:700;line-height:1.2;color:#15202B">记忆与回放</h3></div>
+<p style="font-size:28px;line-height:1.5">从历史 trace 生成记忆供后续任务使用；按步取回当时的状态，断点续跑</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:28px;line-height:1.5;color:#4A5563">单次运行的问题按 trace_id 重建一棵树；统计类问题跨大量 span 筛选与聚合。负载形态是持续追加写入加时间范围分析（append-heavy OLAP）。</p>
+<p style="position:absolute;left:128px;bottom:64px;width:900px;font-size:24px;color:#5F6873">Agent Trace 技术分享</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">04</p>
+</section>

@@ -1,0 +1,29 @@
+<section id="vista-tools" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:64px 72px 112px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">ARC-AGI-3 × VISTA</p>
+<h2 style="font-size:48px;font-weight:700;line-height:1.15;color:#15202B">VISTA 的 8 个工具与系统提示</h2>
+</div>
+<div style="display:flex;gap:40px;flex:1">
+<table style="width:1060px;font-family:'Noto Sans SC', Arial, sans-serif;font-size:24px;color:#1B2530">
+<tr style="background:#ECEAE3"><th style="width:27%;padding:10px 16px;text-align:left">工具</th><th style="width:19%;text-align:left">作用</th><th style="width:54%;text-align:left">输入 → 返回</th></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#A84A14">play</td><td>执行一个动作</td><td>ACTION1–7 或 RESET，点击另带坐标 → 元数据 + 本回合最后一帧</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#2B5F9E">inspect</td><td>回看画面</td><td>1–16 个视图（回合号、帧号、区域）→ 放大后的截图</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#2B5F9E">read_pixels</td><td>测量颜色</td><td>1–64 个视图，按行列网格采样 → 颜色符号矩阵</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#2B5F9E">history</td><td>查动作记录</td><td>events：逐回合动作与结果；attempts：本关各次尝试 → 文字</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#1B2530">read_guide<br>write_guide</td><td>长期笔记</td><td>全文读写，至多 64 KB，整局保留</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace;font-weight:600;color:#1B2530">read_working<br>write_working</td><td>本关草稿</td><td>全文读写，至多 16 KB，过关时归档清空</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FBFAF7;border:1px solid #DEDBD2;border-radius:12px;padding:20px 24px">
+<p style="font-size:24px;font-weight:700;color:#5F6873">系统提示（全文）</p>
+<p style="font-size:24px;line-height:1.4;color:#1B2530"><b>Visual game task.</b> Complete the game with as few game actions as possible. Build and use a compact, revisable model of the game and its current state. Update it as new evidence changes what is supported. Before each play, briefly state what you expect to see. Afterward, briefly state all visible changes, expected or not. Keep concise, durable, revisable game understanding in GUIDE.md; use WORKING.md as a scratchpad when useful.</p>
+</div>
+<ul style="font-size:24px;line-height:1.5;color:#1B2530">
+<li>只有 play 自动返回画面；更早的画面、动画帧和动作记录需要模型按回合号主动查询</li>
+<li>内置工具全部禁用，模型不能读文件、不能执行代码</li>
+</ul>
+</div>
+</div>
+<p style="position:absolute;left:72px;bottom:44px;width:1500px;font-size:24px;color:#5F6873">来源：agent-trace-research/docs/arcagi/vista-runtime-data-flow.md §3；<a href="https://github.com/joshhhhhan/VISTA">github.com/joshhhhhan/VISTA</a></p>
+<p style="position:absolute;right:72px;bottom:44px;width:200px;font-size:24px;color:#5F6873;text-align:right">12</p>
+</section>

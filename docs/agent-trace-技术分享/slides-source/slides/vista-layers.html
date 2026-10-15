@@ -1,0 +1,15 @@
+<section id="vista-layers" data-transition="fade" style="background:#ECEAE3;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">我们的工作</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">两层记录：游戏即时数据与执行全量记录</h2>
+</div>
+<table style="font-family:'Noto Sans SC', Arial, sans-serif;font-size:28px;color:#1B2530">
+<tr style="background:#DEDBD2"><th style="width:16%;padding:16px 24px;text-align:left"></th><th style="width:42%;text-align:left">游戏即时数据（VISTA 核心）</th><th style="width:42%;text-align:left;color:#A84A14">执行全量记录（我们的 trace）</th></tr>
+<tr><td><b>内容</b></td><td>截图、动作、GUIDE / WORKING</td><td>另含 LLM 调用、工具调用、会话段、上下文压缩、ARC 请求、private/ 原文</td></tr>
+<tr><td><b>形态</b></td><td>文件系统，按回合平铺</td><td>OTel span 树，结构化写入数据库</td></tr>
+<tr><td><b>读取方</b></td><td>运行中的 agent</td><td>开发者，以及评估与优化流程</td></tr>
+<tr><td><b>用途</b></td><td>无损记忆：随时回看任意回合</td><td>评估、失败归因、断点续跑、改进 harness、论文分析</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5F6873">Agent Trace 技术分享</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">14</p>
+</section>

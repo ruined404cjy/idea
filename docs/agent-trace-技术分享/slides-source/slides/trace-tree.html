@@ -1,0 +1,68 @@
+<section id="trace-tree" data-transition="fade" style="background:#F5F4EF;color:#1B2530;font-family:'Noto Sans SC', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:700;letter-spacing:3px;color:#A84A14">基础概念</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#15202B">Trace 的结构</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;flex:1">
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-size:24px;font-weight:700;color:#5F6873">span（缩进 = 父子关系）</p>
+<p style="flex:1;font-size:24px;font-weight:700;color:#5F6873">时间 →　示例：修复一个失败的测试</p>
+<p style="width:330px;font-size:24px;font-weight:700;color:#5F6873">attributes 摘录</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;white-space:nowrap">invoke_agent coder</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:0px;top:0;width:836px;height:36px;background:#2B5F9E;border-radius:6px"></div></div>
+<p style="width:330px;font-size:24px;color:#4A5563">用户请求：修复失败的测试</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">├─ chat deepseek-v4.1</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:0px;top:0;width:84px;height:36px;background:#D9A46A;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#4A5563">in 3.1k / out 120 tok</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;white-space:nowrap">├─ invoke_agent tester</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:84px;top:0;width:418px;height:36px;background:#2B5F9E;border-radius:6px"></div></div>
+<p style="width:330px;font-size:24px;color:#4A5563">子 agent：复现失败</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">│  ├─ chat deepseek-v4.1</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:84px;top:0;width:67px;height:36px;background:#D9A46A;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#4A5563">in 1.8k / out 60 tok</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">│  ├─ execute_tool run_tests</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:150px;top:0;width:268px;height:36px;background:#A84A14;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#A84A14">exit 1 · 2 failed</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">│  └─ chat deepseek-v4.1</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:418px;top:0;width:84px;height:36px;background:#D9A46A;border-radius:6px"></div></div>
+<p style="width:330px;font-size:24px;color:#4A5563">总结失败原因</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">├─ chat deepseek-v4.1</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:502px;top:0;width:134px;height:36px;background:#D9A46A;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#4A5563">in 5.4k / out 410 tok</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">├─ execute_tool edit_file</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:635px;top:0;width:50px;height:36px;background:#5F6873;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#4A5563">src/order.py</p>
+</div>
+<div style="display:flex;align-items:center;gap:24px">
+<p style="width:450px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;white-space:nowrap">└─ execute_tool run_tests</p>
+<div style="position:relative;width:836px;flex:none;height:36px;background:#ECEAE3;border-radius:6px"><div style="position:absolute;left:686px;top:0;width:150px;height:36px;background:#5F6873;border-radius:6px"></div></div>
+<p style="width:330px;font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#4A5563">exit 0 · 4 passed</p>
+</div>
+<div style="display:flex;gap:32px;flex-wrap:wrap;padding:8px 0 0 0">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#2B5F9E;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">agent / 子 agent</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#D9A46A;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">LLM 调用</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#5F6873;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">工具调用</p></div>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:28px;height:28px;background:#A84A14;border-radius:4px"></div><p style="font-size:24px;color:#4A5563">status = ERROR</p></div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:28px;line-height:1.5;color:#15202B">每行是一个 span：parent_span_id 指向上一层，整棵树共享一个 trace_id。span 是主要的写入与分析单元，trace_id 是关联键。</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:900px;font-size:24px;color:#5F6873">Agent Trace 技术分享 · 示意数据</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5F6873;text-align:right">03</p>
+</section>
