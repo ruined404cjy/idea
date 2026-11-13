@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 1040" width="1120" height="1040" color="#18384b" role="img" aria-labelledby="diagram-title diagram-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 1080" width="1120" height="1080" color="#18384b" role="img" aria-labelledby="diagram-title diagram-desc">
   <title id="diagram-title">Trace 数据支持 Agent 改进的框架</title>
   <desc id="diagram-desc">授权任务运行产生 Trace，经来源关联与用途质量检查，生成后训练样本、经验记忆和框架改进材料，分别更新模型参数、外部记忆和运行框架。独立评测与新任务执行的结果再次入库。</desc>
   <defs>
@@ -33,7 +33,7 @@
     <text x="560" y="553" text-anchor="middle" font-size="17">检索后提供给新任务</text>
     <text x="560" y="590" text-anchor="middle" font-size="16">执行结果驱动修订与停用</text>
     <rect x="760" y="410" width="300" height="240" rx="8" fill="currentColor" fill-opacity="0.035" stroke="currentColor" stroke-width="1.5"/>
-    <text x="910" y="448" text-anchor="middle" font-size="22" font-weight="700">Harness 改进材料</text>
+    <text x="910" y="448" text-anchor="middle" font-size="22" font-weight="700">运行框架改进材料</text>
     <text x="910" y="487" text-anchor="middle" font-size="17">修改建议与回归样例</text>
     <text x="910" y="520" text-anchor="middle" font-size="17">提示词、工具与代码候选</text>
     <text x="910" y="553" text-anchor="middle" font-size="17">隔离环境执行与版本比较</text>
@@ -54,9 +54,11 @@
     <text x="575" y="801" text-anchor="start" font-size="16">推理时检索读取</text>
     <rect x="230" y="857" width="660" height="100" rx="8" fill="currentColor" fill-opacity="0.035" stroke="currentColor" stroke-width="1.5"/>
     <text x="560" y="895" text-anchor="middle" font-size="22" font-weight="700">独立评测与新任务运行</text>
-    <text x="560" y="930" text-anchor="middle" font-size="17">正确率 · 人工修订工时 · 每个合格任务的成本</text>
+    <text x="560" y="930" text-anchor="middle" font-size="17">正确率 · 人工复核工时 · 每个正确任务推理费用</text>
     <path d="M 890 907 H 1095 V 263 H 958" fill="none" stroke="currentColor" stroke-width="1.7" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
     <text x="1078" y="838" text-anchor="middle" font-size="17" transform="rotate(-90 1078 838)">新 Trace 与效果反馈入库</text>
     <text x="560" y="1006" text-anchor="middle" font-size="16">拟议架构；各路线共享来源管理，分别满足质量与评价要求。</text>
+    <text x="560" y="1034" text-anchor="middle" font-size="15">SFT：监督微调；DPO：直接偏好优化</text>
+    <text x="560" y="1060" text-anchor="middle" font-size="15">PPO：近端策略优化；GRPO：组相对策略优化</text>
   </g>
 </svg>

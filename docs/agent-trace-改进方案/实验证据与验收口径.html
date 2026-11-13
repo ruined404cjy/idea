@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Agent 改进数据服务：实验证据与验收口径</title><style>
+/* 单栏提案正文，框架图独立展开，来源说明置于文末。 */
+:root { --bg:#f4f7fa; --surface:#ffffff; --fg:#18384b; --muted:#496273; --accent:#075f75; --rule:#d5e0e7; --font-display:"Microsoft YaHei UI","PingFang SC",system-ui,sans-serif; --font-body:"Microsoft YaHei","Noto Sans CJK SC","PingFang SC",sans-serif; --font-utility:ui-monospace,"Cascadia Code",monospace; color-scheme:light; }
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101d27;--surface:#172a36;--fg:#e1edf3;--muted:#acc1cf;--accent:#73c8df;--rule:#344f60;color-scheme:dark;}}
+:root[data-theme="dark"]{--bg:#101d27;--surface:#172a36;--fg:#e1edf3;--muted:#acc1cf;--accent:#73c8df;--rule:#344f60;color-scheme:dark;}
+*{box-sizing:border-box;}body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:17px;line-height:1.95;padding-block:36px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}main{max-width:54rem;margin-inline:auto;min-width:0;}article{background:var(--surface);padding:clamp(22px,5vw,56px);border:1px solid var(--rule);}header{display:grid;gap:12px;padding-block:0 24px;border-bottom:2px solid var(--accent);}h1,h2,h3{font-family:var(--font-display);text-wrap:balance;line-height:1.5;}h1{font-size:clamp(26px,4.2vw,36px);font-weight:700;margin:0;}h2{font-size:22px;margin:34px 0 14px;}h3{font-size:18px;margin:25px 0 10px;}p{margin:0 0 15px;overflow-wrap:anywhere;}header p{margin:0;}.eyebrow{font-size:12px;color:var(--muted);letter-spacing:.06em;}a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px;}a:focus-visible{outline:2px solid var(--accent);outline-offset:4px;}figure{margin:27px 0 32px;min-width:0;}.diagram-wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--bg);padding:12px;}.diagram-wrap svg{display:block;width:100%;min-width:820px;height:auto;color:var(--fg);}figcaption{font-size:13px;line-height:1.75;color:var(--muted);margin-top:12px;}.figure-link{display:inline-block;margin-top:6px;}#参考来源{border-top:1px solid var(--rule);padding-top:22px;font-size:15px;}ol{padding-left:1.5em;color:var(--muted);font-size:13px;line-height:1.8;}li{margin-bottom:10px;overflow-wrap:anywhere;}.abstract{background:var(--bg);padding:20px 22px;margin-top:24px;}.abstract h2{margin-top:0;font-size:18px;}.abstract p{margin-bottom:0;}.footer-note{font-size:12px;color:var(--muted);margin-top:20px;}@media(max-width:560px){body{font-size:16px;padding-block:18px 36px;}article{padding:22px 18px;}h2{font-size:20px;}h3{font-size:17px;}.abstract{padding:16px;}header{padding-bottom:20px;}}@media print{body{background:var(--surface);padding:0;}article{border:0;padding:0;}.diagram-wrap svg{min-width:0;}h2,h3{break-after:avoid;}figure{break-inside:avoid;}}
+
+.table-wrap{overflow-x:auto;margin-block:18px;min-width:0;}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.8;}th,td{border:1px solid var(--rule);padding:10px 12px;vertical-align:top;min-width:100px;}th{background:var(--bg);text-align:left;}tr{break-inside:avoid;}thead{display:table-header-group;}code{font-family:var(--font-utility);font-size:.82em;overflow-wrap:anywhere;}sup{font-size:.75em;}article h1{overflow-wrap:anywhere;}
+</style></head><body><main><article><header><p class="eyebrow">实验证据 · 试点与验收说明</p><h1>Agent 改进数据服务：实验证据与验收口径</h1></header><p>本文说明前置实验、拟议机制、试点范围和评价方法。前置实验属于已完成的局部验证；试点指标属于待验证的预设门槛。三类实验分别检验辅助机制、离线转换和存储布局，结论按各自范围使用。</p>
+<h2 id="实验一观测与记忆辅助对照">实验一：观测与记忆辅助对照</h2>
+<h3 id="对象与基线">对象与基线</h3>
+<p>ARC-AGI-3 是交互式视觉推理基准，Agent 通过游戏动作探索未知规则。VISTA 是提供工具、笔记与上下文交接的运行框架。2026-10-26 报告快照中的 5 个已完成游戏，每个游戏对全开组和关闭组各运行 3 轮，共 15 对；同序号运行配对，不表示随机过程完全相同。</p>
+<p>两组使用相同的 GPT-6 Luna 模型、推理设置、上下文阈值和调度队列，从第 1 关开始，按 1,000 动作截断。关闭组的提示、工具定义、输出和交接行为与 VISTA 上游基线一致；全开组增加 11 项观测与记忆辅助，包括画面变化、历史失败提示、带回合引用的规则和交接约束。两组模型参数保持相同。</p>
+<h3 id="得分与结果">得分与结果</h3>
+<p>相对人类动作效率（RHAE）结合过关和动作效率：已过关的单关效率分为 <code>min((人类基线动作数/Agent动作数)^2, 1.15)</code>，未过关计 0；按从 1 开始的关号加权，并以过关情况限制总分上限，报告缩放为 0–100 分。先对每个游戏的 3 轮取均值，再对 5 个游戏等权平均。它衡量游戏表现，与经营分析任务正确率分别统计。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align:right">关闭辅助基线</th>
+<th style="text-align:right">11 项辅助全开</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平均 RHAE</td>
+<td style="text-align:right">12.7</td>
+<td style="text-align:right">33.4</td>
+</tr>
+<tr>
+<td>过关数合计</td>
+<td style="text-align:right">53</td>
+<td style="text-align:right">81</td>
+</tr>
+<tr>
+<td>15 对中得分更高的全开运行</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">13 对</td>
+</tr>
+</tbody>
+</table></div>
+<p>实验未做单项消融；结果支持辅助组合在这组游戏中的效果。自动经验生成、跨独立业务任务复用、存储贡献和生产收益分别验证。</p>
+<p><strong>来源</strong>：《VISTA 观测与记忆辅助在 ARC-AGI-3 上的对照实验报告》，2026-10-26，第 1、2.1、2.3、3.3 节；内容 SHA-256：<code>c02f98bbdb24a520880252092954e2c2562c3fdf565eabe7ec2ede9539a9fdf9</code>。该报告为内部实验原始材料；本文提供独立可读的条件、结果和边界摘要。公开计分定义见 <a href="https://docs.arcprize.org/methodology">ARC Prize 官方方法</a>。</p>
+<h2 id="实验二离线监督样本转换">实验二：离线监督样本转换</h2>
+<h3 id="输入与两条路径">输入与两条路径</h3>
+<p>从 SWE-smith 和 SWE-Gym 两个公开编程任务轨迹集的固定分片各取前 8 条，每条选取一个已有完整工具调用与返回历史的决策，共 16 个单决策样本。这是确定性契约用例，不是随机抽样；目标集中于早期编辑工具调用。</p>
+<ol>
+<li><strong>直接路径</strong>：冻结源记录 → 协议规范化 → 选定决策 → 用固定模板和分词器构造输入、目标与监督标签。</li>
+<li><strong>重建路径</strong>：同一决策 → 仿 OpenTelemetry 的事件记录及附属顺序、内容引用 → 重建决策 → 使用相同模板、分词器和监督规则生成样本。</li>
+</ol>
+<p>OpenTelemetry 是观测数据标准；本实验只在离线文件中模拟其记录组织，没有经过真实 OpenTelemetry Protocol 传输、Collector 采集组件或数据库。使用 Qwen2.5-Coder-0.5B-Instruct 对应分词器，未进行模型前向计算和参数训练。</p>
+<h3 id="检查结果与证据等级">检查结果与证据等级</h3>
+<p>16 个样本的规范化语义、输入分词编号、监督标签、目标起点和有效监督数均一致。输入合计 31,323 个分词单元，有效监督 948 个。相同输入的重复物化产物保持确定性。</p>
+<p>按“公开轨迹、约定配方”要求，16 个样本可用于构造监督；按“精确复现原始模型请求”要求，16 个均因缺请求快照而拒收。该结果说明用途准入需要区分证据要求，也说明转换一致不能证明原始请求完整。真实摄入保真、后段决策覆盖、工具执行和训练收益仍需独立验收。</p>
+<p><strong>来源</strong>：《离线 Trace-to-Training 契约：设计、实现与验收结论》，2026-11-12，第 2–4、6 节；内容 SHA-256：<code>391c3c38cfbc4e55544afcbf237cb0b3425240e0c544630d92f49c3ddeef3c73</code>。该报告为内部实验原始材料。</p>
+<h2 id="实验三长载荷存储布局">实验三：长载荷存储布局</h2>
+<h3 id="前置发现">前置发现</h3>
+<p>实验比较 openGauss、ClickHouse 和 XStore 上的同表、分表、完整表加窄表、外置对象布局，使用确定性投影数据与受控载荷，测试写入、列表、详情、完整执行记录、批量读取和故障一致性。</p>
+<p>同为 80 MiB 载荷，40 个 2 MiB 对象时外置布局最快，1,280 个 64 KiB 对象时最慢。外置后的空间收益也取决于库内压缩能力：原实验中 openGauss、ClickHouse 总占用分别增至同表的 2.884、6.921 倍，XStore 为 0.787 倍。以上为特定引擎、版本、数据和主机上的结果，不作为通用阈值。</p>
+<p>各请求流改为分进程后，首轮大量前台请求丢弃基本消失，表明早期明显干扰主要来自压测客户端争用。该实验范围内，分表与外置的前台隔离收益没有得到支持。</p>
+<h3 id="试点选型方法">试点选型方法</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>数据消费</th>
+<th>首先比较的布局</th>
+<th>决策指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务过滤、版本比较</td>
+<td>结构化索引、窄字段读取</td>
+<td>查询计划、扫描量、尾延迟</td>
+</tr>
+<tr>
+<td>详情、近期上下文与证据读取</td>
+<td>同表与库内分表</td>
+<td>详情延迟、连接成本、压缩率</td>
+</tr>
+<tr>
+<td>低频大产物、长期归档</td>
+<td>库内与外置对象</td>
+<td>对象数量与大小、请求次数、总空间及恢复成本</td>
+</tr>
+<tr>
+<td>训练样本批量导出</td>
+<td>上述布局的批量读路径</td>
+<td>吞吐、解压与重建成本、交付完整性</td>
+</tr>
+</tbody>
+</table></div>
+<p>在目标引擎和真实载荷分布上测量后冻结布局。外置方案关联事件引用、对象目录和内容哈希，验证对象缺失、引用失败、重复写入与补偿；内容不可用时拒绝相关交付并报告状态。</p>
+<p><strong>来源</strong>：《Agent Trace JSON 存储阶段三组内汇报：长载荷的四种布局》，2026-10-08，第 1、7、10–16 节，含后续修订结论；内容 SHA-256：<code>bfda85b28d4f77228d8586e39b9fc106859f468c12ecef6183efe501da6074f4</code>。该报告为内部实验原始材料。</p>
+<h2 id="与既有管线的差异及验证">与既有管线的差异及验证</h2>
+<p>Agent Lightning v1.0 已提供训练器、模型请求网关和运行控制器，将真实运行框架中的交互组织为训练数据，包含数据清理和奖励投机防护示例。其 Agent Lightning Skill 还支持修改提示词、工具、工作流、模型和配置，并用基准比较效果。因此，运行与训练解耦、使用执行反馈、支持框架改进均属于已有能力。</p>
+<p>本方案提出的增量设计如下，属于待比较验证的工程机制；公开材料未提到某项能力，不作为其不存在的证据。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>增量设计</th>
+<th>具体产物</th>
+<th>验证方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同一记录按用途分别准入</td>
+<td>用途、准入状态、证据缺口、拒收理由、规则版本</td>
+<td>在相同输入上比较缺陷检出与误拒情况</td>
+</tr>
+<tr>
+<td>保留用途相关的可核验关联</td>
+<td>输入引用、接口、结果证据、环境及模型版本</td>
+<td>注入缺失、乱序、错配和版本冲突，检查阻断范围</td>
+</tr>
+<tr>
+<td>来源至改进效果的关联</td>
+<td>来源 → 转换 → 数据集／记忆／框架版本 → 评测结果</td>
+<td>追溯覆盖率、重建与撤回演练、加工工时</td>
+</tr>
+</tbody>
+</table></div>
+<p>数据管理对照拟采用固定版本 Agent Lightning 的采集、清理与训练数据构造能力，接入相同导出适配和人工复核流程；实验组增加上述用途检查和关联机制。两组使用相同输入、目标格式及判定标签，记忆和框架材料使用相同转换器；适配成本单列。冻结 40 个有效用例和 40 个已知缺陷用例；缺陷覆盖截断、乱序、接口缺失、结果错配、未来评价信息混入、采样版本不符、对象缺失、授权缺失 8 类。目标是在这些已知类别上缺陷检出率至少 95%、有效用例误拒率至多 5%。这项检查只覆盖定义的用例范围。</p>
+<p><strong>公开比较来源</strong>：<a href="https://github.com/microsoft/agent-lightning/blob/2070bad5113e52f1aa2e5bdba822d4b24b197c05/README.html">Agent Lightning 官方 README</a>；<a href="https://github.com/microsoft/agent-lightning/blob/2070bad5113e52f1aa2e5bdba822d4b24b197c05/skills/README.html">Agent Lightning Skill</a>，固定提交 <code>2070bad5113e52f1aa2e5bdba822d4b24b197c05</code>，访问于 2026-11-13。</p>
+<h2 id="试点设计与验收口径">试点设计与验收口径</h2>
+<h3 id="范围与阶段">范围与阶段</h3>
+<ul>
+<li><strong>业务范围</strong>：一个经过授权、脱敏的企业经营数据库快照，包含订单、退款、费用相关数据；工具只读。三个任务类别为指标查询、关联汇总和异常解释，每类 30 项，共 90 项。</li>
+<li><strong>数据划分</strong>：每类 10 项开发、20 项评测。按业务问题、查询模板、任务来源及时间去重隔离；相似任务作为一组划分。开发阶段使用的时间分区与封存评测分区分离。评价答案及测试专用信息存于独立权限域。</li>
+<li><strong>改进材料</strong>：开发任务采集多候选和人工纠正，构造监督及偏好样本、经验和框架回归集。监督与偏好训练先检验交付格式及小规模可行性；近端及组相对策略优化首期只测试重新采样和奖励记录适配。训练算力、训练成本和后续能力收益独立立项验收。</li>
+<li><strong>比较方法</strong>：记忆实验固定模型和框架；框架实验固定模型和经验库；训练实验固定基础模型来源、工具及评测框架，并记录更新后的权重版本。推理调用次数、分词预算、计价表与停止条件一致。</li>
+<li><strong>发布评价</strong>：在开发集选定一个发布候选，冻结其权重、记忆、框架及规则版本，再与原基线对比。60 个封存任务各重复 3 次，两组均为 180 次运行。开发阶段比较过的其他候选不参与封存集择优；增加候选需处理多重比较或启用新评测集。</li>
+</ul>
+<h3 id="预设目标">预设目标</h3>
+<p>下列数值是试点设计门槛，尚无业务实测支撑。启动时由业务与技术负责人确认、在封存评测前冻结。业务收益须经试点测量。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>定义</th>
+<th>预设目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务正确率</td>
+<td>执行成功、数值对账、业务口径核验均通过的运行数／总运行数</td>
+<td>比固定基线提高至少 5 个百分点</td>
+</tr>
+<tr>
+<td>人工复核工时</td>
+<td>复核人员不知道候选版本，按运行计有效审阅和修订时间</td>
+<td>每次运行的平均工时下降至少 20%</td>
+</tr>
+<tr>
+<td>每个正确任务推理费用</td>
+<td>全部运行及重试的推理费用之和／正确运行数；含检索和使用经验所需的模型调用</td>
+<td>不高于基线</td>
+</tr>
+<tr>
+<td>来源可追溯率</td>
+<td>来源、转换规则、版本、结果证据均可定位的交付产物数／交付产物总数</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>数据检查能力</td>
+<td>上述固定用例内的缺陷检出率、有效用例误拒率</td>
+<td>至少 95%、至多 5%</td>
+</tr>
+<tr>
+<td>权限与交付检查</td>
+<td>检查集覆盖的越权读取、敏感字段导出、对象引用失效</td>
+<td>全部阻断并报告原因</td>
+</tr>
+</tbody>
+</table></div>
+<p>推理费用使用冻结价表；训练、数据准备和框架优化的一次性费用单列，另行计算预期任务量下的摊销成本。没有正确运行时，每个正确任务费用视为不可验收。</p>
+<p>对同一任务的三次运行先聚合，以任务为单位进行配对重采样，报告差异的 95% 置信区间。正确率差异须达到 5 个百分点，且区间下界大于 0，才认定试点支持质量提升；其余业务门槛也需满足。未达到时记录为未确认收益，补充样本后重新验收。</p>
+<h2 id="风险与边界">风险与边界</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>风险</th>
+<th>控制与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>隐私泄露、训练用途越权</td>
+<td>按采集、检索、训练、导出用途分别授权；脱敏后复核，保留撤销和删除传播记录；已训练权重单独处置，源数据删除与参数遗忘分别管理</td>
+</tr>
+<tr>
+<td>评测泄漏、错误或伪造反馈</td>
+<td>封存评价资产，按任务组隔离；执行、对账和人工证据分别关联，保留验证状态</td>
+</tr>
+<tr>
+<td>错误经验传播、环境漂移</td>
+<td>绑定适用条件和环境版本；回归失败时停用经验，保留来源与反例</td>
+</tr>
+<tr>
+<td>奖励投机、框架过拟合</td>
+<td>候选在隔离环境执行，评价器及参考答案保持只读隔离，使用封存任务验证</td>
+</tr>
+<tr>
+<td>副作用、对象丢失与成本增加</td>
+<td>首期仅只读查询；检验引用和内容一致性，失败阻断交付；训练与优化费用单独预算</td>
+</tr>
+</tbody>
+</table></div>
+<p>验收覆盖定义的任务、检查和环境范围。生产多租户隔离、业务写操作、长期环境演化和持续训练收益需要后续专项验证。</p>
+<h2 id="术语">术语</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用语</th>
+<th>本文含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>智能体（Agent）</td>
+<td>调用模型与工具完成多步骤任务的系统</td>
+</tr>
+<tr>
+<td>执行记录（Trace）</td>
+<td>关联任务、模型调用、工具交互、环境反馈和结果证据的记录</td>
+</tr>
+<tr>
+<td>企业经营分析</td>
+<td>使用订单、退款、费用等业务数据进行指标查询、汇总和异常解释；本文商业场景的统一称呼</td>
+</tr>
+<tr>
+<td>运行框架（harness）</td>
+<td>模型外部的提示词、工具、控制流程和上下文管理机制</td>
+</tr>
+<tr>
+<td>经验记忆</td>
+<td>从执行记录提取、带条件和证据、供推理时读取的数据</td>
+</tr>
+<tr>
+<td>监督微调（SFT）</td>
+<td>Supervised Fine-Tuning，学习给定输入下的目标输出</td>
+</tr>
+<tr>
+<td>直接偏好优化（DPO）</td>
+<td>Direct Preference Optimization，利用同一输入下候选的偏好监督更新模型</td>
+</tr>
+<tr>
+<td>近端策略优化（PPO）</td>
+<td>Proximal Policy Optimization，利用采样、奖励和策略约束更新模型</td>
+</tr>
+<tr>
+<td>组相对策略优化（GRPO）</td>
+<td>Group Relative Policy Optimization，利用同组候选的相对奖励更新策略</td>
+</tr>
+<tr>
+<td>分词单元（token）</td>
+<td>分词器输出的模型输入或输出单位；监督标签决定哪些位置参与损失</td>
+</tr>
+<tr>
+<td>准入</td>
+<td>根据用途的证据、完整性、授权和版本要求决定数据是否可交付</td>
+</tr>
+<tr>
+<td>血缘／来源关联</td>
+<td>从原始记录经转换到产物及后续评价的可追溯关系</td>
+</tr>
+</tbody>
+</table></div>
+<p>算法原始来源：<a href="https://arxiv.org/abs/2305.18290">DPO</a>、<a href="https://arxiv.org/abs/1707.06347">PPO</a>、<a href="https://arxiv.org/abs/2402.03300">GRPO 所在 DeepSeekMath 论文</a>。</p>
+</article></main></body></html>
